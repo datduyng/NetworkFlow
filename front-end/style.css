@@ -1,0 +1,11 @@
+body { background: #e6f7ff !important;}
+
+/*Color of the Navigation bar*/
+.navbar.navbar-expand-lg.navbar-light.static-top {
+	background-color: #cceeff;
+}
+
+.navbar-brand {
+  padding: 0px;
+}
+

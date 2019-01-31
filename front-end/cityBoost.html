@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<!-- //add padding(default 0) -->
+<style>* {padding: 10; margin: 0}</style>
+
+<head>
+  <!-- <meta charset="utf-8"> -->
+  <title>Hello World</title>
+  <script src="./js-lib/pixi/pixi.min.js">
+</head>
+  </script>
+  
+  <!-- Logo -->
+  <link rel="icon" href="./images/cityboost01.png">
+
+<body>
+  <script type="text/javascript" src="./app.js"></script>
+  <script type="text/javascript">
+    let type = "WebGL"
+    if(!PIXI.utils.isWebGLSupported()){
+      type = "canvas"
+    }
+
+    PIXI.utils.sayHello(type)
+  </script>
+  
+</body>
+</html>
