@@ -1,0 +1,132 @@
+
+
+<!doctype html>
+<html>
+<head>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script type="text/javascript" src="js-lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="js-lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap core CSS -->
+    <link href="js-lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <script type="text/javascript" src="./js-lib/jquery/jquery.min.js"></script>
+    <script src="./js-lib/pixi/pixi.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.4.3/pixi.min.js"></script> -->
+    <!-- <script src="./js-lib/pixi-tilemap/pixi-tilemap.js"></script> -->
+</head>
+<body>
+    <script type="text/javascript" src="./global.js"></script>
+    <div>
+        <a>Button list<br></a>
+        <ul>
+            <li><button id="grassBtn">grass</button></li>
+            <li><button id="groundBtn">ground</button></li>
+            <li><button id="roadHorizontalBtn">road-horizontal</button></li>
+            <li><button id="roadVerticleBtn">road-verticle</button></li>
+            <li><button id="intersectionBtn">intersection</button></li>
+            <li><button id="constructionManBtn">Construction Man</button>  <button id="constructionBarierBtn">Construction Barier</button>
+        </ul>
+        <script type="text/javascript">
+            //button handler
+            $('#groundBtn').click(function(e){
+                currentTileType = 'ground';
+            });
+            $('#grassBtn').click(function(e){
+                currentTileType = 'grass';
+            });
+            $('#roadHorizontalBtn').click(function(e){
+                currentTileType = 'road-horizontal';
+            });
+            $('#roadVerticleBtn').click(function(e){
+                currentTileType = 'road-verticle';
+            });
+            $('#intersectionBtn').click(function(e){
+                currentTileType = 'intersection';
+            });
+            $('#constructionManBtn').click(function(e){
+                currentTileType = 'construction-man';
+            });
+            $('#constructionBarierBtn').click(function(e){
+                currentTileType = 'construction-barrier';
+            });
+
+        </script>
+    </div>
+          <div class="col-md-10 mb-4 order-md-1" id="game-frame">
+                <script type="text/javascript" src="./Tile.js"></script>
+                <script src="./app.js"></script>
+            
+          </div>
+</body>
+</html>
+
+
+
+
+<!-- PIXI-tilemap -->
+<!--     // var loader = new PIXI.loaders.Loader();
+    // loader.add('atlas', 'basic/atlas01.json');
+    // loader.load(function(loader, resources) {
+    //   var tilemap = new PIXI.tilemap.CompositeRectTileLayer(0, [resources['atlas_image'].texture]);
+
+    //     console.log(tilemap);
+    //     var size = 32;
+    //     // bah, im too lazy, i just want to specify filenames from atlas
+    //     for (var i=0;i<7;i++)
+    //         for (var j=0;j<7;j++) {
+    //             tilemap.addFrame("grass.png", i*size, j*size);
+    //             // if (i%2==1 && j%2==1)
+    //             //     tilemap.addFrame("tough.png", i*size, j*size);
+    //         }
+
+    //     // if you are lawful citizen, please use textures from the loader
+    //     // var textures = resources.atlas.textures;
+    //     // tilemap.addFrame(textures["brick.png"], 2*size, 2*size);
+    //     // tilemap.addFrame(textures["brick_wall.png"], 2*size, 3*size);
+
+    //     // renderer.render(tilemap);
+    //     app.stage.addChild(tilemap);
+    // });
+
+    // PIXI.loader.add(["imgs/imgGround.png"]).load(setup);
+
+    // function setup() {
+
+    //     var groundTiles = new PIXI.tilemap.CompositeRectTileLayer(0, PIXI.utils.TextureCache['imgs/imgGround.png']);
+    //     app.stage.addChild(groundTiles);
+
+
+    //     for (var i = 0; i <= parseInt(resolutionX / tileSizeX); i++) {
+    //         for (var j = 0; j <= parseInt(resolutionX / tileSizeX); j++) {
+    //             groundTiles.addFrame('imgs/imgGround.png', i * tileSizeX, j * tileSizeY);
+    //         }
+    //     }
+    // }
+
+
+    /*
+
+var loader = new PIXI.loaders.Loader();
+loader.add('atlas', 'basic/atlas.json');
+loader.load(function(loader, resources) {
+  var tilemap = new PIXI.tilemap.CompositeRectTileLayer(0, [resources['atlas_image'].texture]);
+    var size = 32;
+    // bah, im too lazy, i just want to specify filenames from atlas
+    for (var i=0;i<7;i++)
+        for (var j=0;j<7;j++) {
+            tilemap.addFrame("grass.png", i*size, j*size);
+            if (i%2==1 && j%2==1)
+                tilemap.addFrame("tough.png", i*size, j*size);
+        }
+
+    // if you are lawful citizen, please use textures from the loader
+    var textures = resources.atlas.textures;
+    tilemap.addFrame(textures["brick.png"], 2*size, 2*size);
+    tilemap.addFrame(textures["brick_wall.png"], 2*size, 3*size);
+
+    renderer.render(tilemap);
+});
+
+    */ -->
