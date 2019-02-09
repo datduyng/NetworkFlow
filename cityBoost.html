@@ -2,6 +2,7 @@
 
 <!doctype html>
 <html>
+
 <head>
 
     <!-- Bootstrap core JavaScript -->
@@ -15,10 +16,86 @@
     <script src="./js-lib/pixi/pixi.min.js"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.4.3/pixi.min.js"></script> -->
     <!-- <script src="./js-lib/pixi-tilemap/pixi-tilemap.js"></script> -->
+
+
+    <!-- Materialize? -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+
 </head>
-<body>
+<body class="container">
+
+<!-- Nav bar -->
+<!-- https://stackoverflow.com/questions/42435938/simple-materialize-ui-responsive-side-menu -->
+<style type="text/css">
+
+    #container {
+      padding-left: 300px;
+    }
+
+    #content {
+      padding: 20px;
+    }
+
+    @media only screen and (max-width : 992px) {
+      #container {
+        padding-left: 0px;
+      }
+    } 
+    .center-btn { text-align: center }
+    /*.btn {background-color: #ffab91;}*/
+</style>
+
+
+<!-- Start side nav bar -->
+<div>
+<div id="container">
+
+  <div id="menu">
+
+    <ul id="slide-out" class="side-nav fixed show-on-large-only">
+      <li><a href="#!">First Sidebar Link</a></li>
+      <li><a href="#!">Second Sidebar Link</a></li>
+      <li class="no-padding">
+        <ul class="collapsible collapsible-accordion">
+          <li>
+            <a class="collapsible-header">Dropdown<i class="material-icons">arrow_drop_down</i></a>
+            <div class="collapsible-body">
+              <ul>
+                <li><a href="#!">First</a></li>
+                <li><a href="#!">Second</a></li>
+                <li><a href="#!">Third</a></li>
+                <li><a href="#!">Fourth</a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+
+    <div id="content">
+        <a href="#" data-activates="slide-out" class="button-collapse hide-on-large-only"><i class="material-icons">menu</i></a>
+    </div>
+    <script type="text/javascript">
+        $('.button-collapse').sideNav({
+            menuWidth: 300, // Default is 300
+            edge: 'left', // Choose the horizontal origin
+            closeOnClick: false, // Closes side-nav on <a> clicks, useful for Angular/Meteor
+            draggable: true // Choose whether you can drag to open on touch screens
+        });
+    </script>
+</div>
+<!-- end side nav bar -->
+
+</div>
+
     <script type="text/javascript" src="./global.js"></script>
-    <div>
+    <!-- <div>
         <a>Button list<br></a>
         <ul>
             <li><button id="grassBtn">grass</button></li>
@@ -53,12 +130,64 @@
             });
 
         </script>
+    </div> -->
+   
+<!--   <fieldset>
+  <legend>Button group</legend> -->
+    <div class="app-control" style="position:relative;top:400px;left:40px;">
+<!--         <div class="centered center-btn">
+        traffic Component: <a href="" class="waves-effect waves-light btn">Stuff1</a><br>
+                  <a href="" class="waves-effect waves-light btn">Stuff2</a><br>
+                  <a href="" class="waves-effect waves-light btn">Stuff3</a><br>
+        </div> -->
+        <div style="text-align: center;">
+            <div class="centered center-btn" style="display: inline-block; text-align: left;">
+              <form action="#">
+                <div class="file-field input-field">
+                  <div class="btn">
+                    <span>Load .csv</span><i class="material-icons right">call_received</i>
+                    <input id="uploadcsv" type="file">
+                  </div>
+                  <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text">
+                  </div>
+
+                </div>
+              </form>
+
+                <br /><br><br>
+                Traffic Component: &emsp;<a id="intersectionBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'intersection';">Stop Sign</a> 
+                                   &emsp;<a id="intersectionBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'intersection';">Traffic Lights</a><br />
+                                     <br />
+                Tile Type: &emsp;<a id="groundBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'ground';">Ground</a>
+                           &emsp;<a id="grassBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'grass';">Grass</a>
+                           &emsp;<a id="roadHorizontalBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'road-horizontal';">Road-horizontal</a>
+                           &emsp;<a id="roadVerticleBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'road-verticle';">Road-verticle</a><br />
+                  <!-- <a href="" class="waves-effect waves-light btn">Stuff3</a><br /> -->
+                                    <br />
+                Block: &emsp;<a id="constructionManBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'construction-man';">Construction Man</a>
+                       &emsp;<a id="constructionBarierBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'construction-barrier';">Construction Barrier</a>
+
+                       <br /> <br />
+                    ---------------------------<br />
+                Export to: &emsp;<a id="constructionBarierBtn" class="waves-effect waves-light btn" onclick="
+                    exportCSV('simulation-map.csv', mapToCsvFormat(simMap));
+                ">.csv<i class="material-icons right">send</i></a>
+                           &emsp;<a id="constructionBarierBtn" class="waves-effect waves-light btn disabled" onclick="currentTileType = 'construction-barrier';">JSON <i class="material-icons right">send</i></a>
+            </div>
+        </div>
     </div>
-          <div class="col-md-10 mb-4 order-md-1" id="game-frame">
-                <script type="text/javascript" src="./Tile.js"></script>
-                <script src="./app.js"></script>
-            
-          </div>
+
+    <div>
+    <canvas align="center" id="game-canvas" width="600" height="400">
+        <script type="text/javascript" src="./Tile.js"></script>
+        <script src="./app.js"></script>
+    </canvas>
+    </div>
+
+<!-- </fieldset> -->
+
+
 </body>
 </html>
 
@@ -130,3 +259,5 @@ loader.load(function(loader, resources) {
 });
 
     */ -->
+
+

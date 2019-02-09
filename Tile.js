@@ -42,7 +42,9 @@ Tile.prototype.swapTexture = function(type){
 		texture = PIXI.Texture.fromImage(spritePath[5]);
 	}else if(this.type === 'construction-barrier'){
 		texture = PIXI.Texture.fromImage(spritePath[6]);
-	}
+	}else{
+        console.log("Tile Nothing");
+    }
 	this.texture = texture;
 }
 
@@ -88,4 +90,3 @@ Tile.prototype.setInteractive = function(){
        //handle event
     });
 }
-
