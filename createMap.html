@@ -52,13 +52,13 @@
 
 <!-- Start side nav bar -->
 <div>
-<div id="container">
+<div class="col-md-4" id="container">
 
   <div id="menu">
 
     <ul id="slide-out" class="side-nav fixed show-on-large-only">
-      <li><a href="#!">First Sidebar Link</a></li>
-      <li><a href="#!">Second Sidebar Link</a></li>
+      <li><a href="index.html">Project Overview</a></li>
+      <li><a href="createMap.html">Create Map</a></li>
       <li class="no-padding">
         <ul class="collapsible collapsible-accordion">
           <li>
@@ -83,7 +83,7 @@
     </div>
     <script type="text/javascript">
         $('.button-collapse').sideNav({
-            menuWidth: 300, // Default is 300
+            menuWidth: 200, // Default is 300
             edge: 'left', // Choose the horizontal origin
             closeOnClick: false, // Closes side-nav on <a> clicks, useful for Angular/Meteor
             draggable: true // Choose whether you can drag to open on touch screens
@@ -92,56 +92,17 @@
 </div>
 <!-- end side nav bar -->
 
-</div>
+    <div class="col-md-12">
+        <div align="right">
+        <canvas id="game-canvas" width="800" height="600"></canvas>    
+        </div>
 
-    <script type="text/javascript" src="./global.js"></script>
-    <!-- <div>
-        <a>Button list<br></a>
-        <ul>
-            <li><button id="grassBtn">grass</button></li>
-            <li><button id="groundBtn">ground</button></li>
-            <li><button id="roadHorizontalBtn">road-horizontal</button></li>
-            <li><button id="roadVerticleBtn">road-verticle</button></li>
-            <li><button id="intersectionBtn">intersection</button></li>
-            <li><button id="constructionManBtn">Construction Man</button>  <button id="constructionBarierBtn">Construction Barier</button>
-        </ul>
-        <script type="text/javascript">
-            //button handler
-            $('#groundBtn').click(function(e){
-                currentTileType = 'ground';
-            });
-            $('#grassBtn').click(function(e){
-                currentTileType = 'grass';
-            });
-            $('#roadHorizontalBtn').click(function(e){
-                currentTileType = 'road-horizontal';
-            });
-            $('#roadVerticleBtn').click(function(e){
-                currentTileType = 'road-verticle';
-            });
-            $('#intersectionBtn').click(function(e){
-                currentTileType = 'intersection';
-            });
-            $('#constructionManBtn').click(function(e){
-                currentTileType = 'construction-man';
-            });
-            $('#constructionBarierBtn').click(function(e){
-                currentTileType = 'construction-barrier';
-            });
+        <script type="text/javascript" src="./global.js"></script>
 
-        </script>
-    </div> -->
-   
-<!--   <fieldset>
-  <legend>Button group</legend> -->
-    <div class="app-control" style="position:relative;top:400px;left:40px;">
-<!--         <div class="centered center-btn">
-        traffic Component: <a href="" class="waves-effect waves-light btn">Stuff1</a><br>
-                  <a href="" class="waves-effect waves-light btn">Stuff2</a><br>
-                  <a href="" class="waves-effect waves-light btn">Stuff3</a><br>
-        </div> -->
-        <div style="text-align: center;">
-            <div class="centered center-btn" style="display: inline-block; text-align: left;">
+    <!--   <fieldset>
+      <legend>Button group</legend> -->
+        <div class="app-control" align="right">
+            <div class="centered center-btn app-control" style="display: inline-block; text-align: left;text-align: center;">
               <form action="#">
                 <div class="file-field input-field">
                   <div class="btn">
@@ -154,8 +115,6 @@
 
                 </div>
               </form>
-
-                <br /><br><br>
                 Traffic Component: &emsp;<a id="intersectionBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'intersection';">Stop Sign</a> 
                                    &emsp;<a id="intersectionBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'intersection';">Traffic Lights</a><br />
                                      <br />
@@ -171,18 +130,14 @@
                        <br /> <br />
                     ---------------------------<br />
                 Export to: &emsp;<a id="constructionBarierBtn" class="waves-effect waves-light btn" onclick="
-                    exportCSV('simulation-map.csv', mapToCsvFormat(simMap));
+                    exportCSV('simulation-map.csv', null);
                 ">.csv<i class="material-icons right">send</i></a>
                            &emsp;<a id="constructionBarierBtn" class="waves-effect waves-light btn disabled" onclick="currentTileType = 'construction-barrier';">JSON <i class="material-icons right">send</i></a>
             </div>
         </div>
-    </div>
 
-    <div>
-    <canvas align="center" id="game-canvas" width="600" height="400">
         <script type="text/javascript" src="./Tile.js"></script>
         <script src="./app.js"></script>
-    </canvas>
     </div>
 
 <!-- </fieldset> -->
@@ -190,8 +145,6 @@
 
 </body>
 </html>
-
-
 
 
 <!-- PIXI-tilemap -->
@@ -260,3 +213,5 @@ loader.load(function(loader, resources) {
 
 <<<<<<< HEAD:cityBoost.html
     */ -->
+
+

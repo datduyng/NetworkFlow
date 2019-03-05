@@ -46,6 +46,7 @@ Tile.prototype.swapTexture = function(type){
         console.log("Tile Nothing");
     }
 	this.texture = texture;
+    
 }
 
 Tile.prototype.setInteractive = function(){
@@ -61,10 +62,12 @@ Tile.prototype.setInteractive = function(){
             //build here
             this.swapTexture(currentTileType)
         }
+        renderer.render(stage);
     }).on('mouseout', (event) => {
         console.log("mouseout");
         // if(!hold){
         	this.tint = 0xFFFFFF;
+            renderer.render(stage);
         // }
         
     }).on('mousedown', (event) => {
@@ -76,6 +79,7 @@ Tile.prototype.setInteractive = function(){
         // this(texture );
         // this.setTexture('ground');
        	this.swapTexture(currentTileType);
+        renderer.render(stage);
         console.log(this);
         // build here
         // app.stage.
