@@ -1,10 +1,7 @@
 document.getElementById("uploadcsv").addEventListener("change", loadCSV, true);
 
 //pixijs ex:http://scottmcdonnell.github.io/pixi-examples/index.html?s=demos&f=texture-swap.js&title=Texture%20Swap
-var WIDTH =800;
-var HEIGHT = 600;
 
-var tileSize = 50;
 
 
 var stage = new PIXI.Stage(0x66FF99);
@@ -22,6 +19,7 @@ for(i = 0;i < mapY;i++){
     simMap[i] = new Array(mapX);//.fill(new Tile('grass',tileSize));
 }
 
+var carList = [];
 
 let sprites = {}; 
 
@@ -44,14 +42,15 @@ function _setupMap(){
     for(var x =0;x<mapX;x++){
         for(var y=0;y<mapY;y++){
             simMap[y][x] = new Tile('grass',tileSize);
-            simMap[y][x].setX(x*tileSize);
-            simMap[y][x].setY(y*tileSize);
+            simMap[y][x].setXY(x*tileSize, y*tileSize);
             //setup sprite event here
             simMap[y][x].setInteractive();
+            simMap[y][x].setIndexXY(x, y); 
             stage.addChild(simMap[y][x]);
         }
     }
 }
+
 
 function mapToCsvFormat(simMap){
     var csv = "";
@@ -78,6 +77,21 @@ function exportCSV(filename, csv){
     link.click();
 }
 
+var degree = 0;
+/**
+ * THis rotate the car and arrow help user visualize the dir
+ */
+function rotateVisualization(){
+    degree += 90%360;//ensure to be in range [0,270]
+    $('.visualize-car-orientation').css({
+      'transform': 'rotate(' + degree + 'deg)',
+      '-ms-transform': 'rotate(' + degree + 'deg)',
+      '-moz-transform': 'rotate(' + degree + 'deg)',
+      '-webkit-transform': 'rotate(' + degree + 'deg)',
+      '-o-transform': 'rotate(' + degree + 'deg)'
+    });
+}
+
 function loadCSV(e){
     console.log("upload changed");
     var data = null;
@@ -95,8 +109,6 @@ function loadCSV(e){
             simMap[i] = new Array(lines[0].split(',').length-1);
         }
 
-        console.log('height'+simMap.length)
-        console.log('width'+simMap[0].length)
         for(var l=0;l<lines.length-1;l++){
             if(lines[l] != null || lines[l] != ""){
                 tokens = lines[l].split(',');
@@ -110,8 +122,7 @@ function loadCSV(e){
                     // console.log('::'+tokens[t].trim()+'::');
                     simMap[l][t] = new Tile(tokens[t],tileSize);
                     
-                    simMap[l][t].setX(t*tileSize);
-                    simMap[l][t].setY(l*tileSize);
+                    simMap[l][t].setXY(t*tileSize, l*tileSize);
 
                     //setup sprite event here
                     simMap[l][t].setInteractive();

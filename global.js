@@ -16,13 +16,19 @@ $(document).on('mouseup', function(){
 
 
 var spritePath = [
-    "images/sim-asset/grass.png",
-    "images/sim-asset/ground.png",
-    "images/sim-asset/road-horizontal.png",
-    "images/sim-asset/road-verticle.png",
-    "images/sim-asset/intersection.png",
-    "images/sim-asset/construction-man.png",
-    "images/sim-asset/construction-barrier.png"
+    "images/sim-asset/grass.png",//0
+    "images/sim-asset/ground.png",//1
+    "images/sim-asset/road-horizontal.png",//2
+    "images/sim-asset/road-verticle.png",//3
+    "images/sim-asset/intersection.png",//4
+    "images/sim-asset/construction-man.png",//5
+    "images/sim-asset/construction-barrier.png",//6
+    "images/sim-asset/car.png"//7
 ];
 
 var currentTileType = 'grass';
+
+var WIDTH =800;
+var HEIGHT = 600;
+
+var tileSize = 50;
