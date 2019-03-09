@@ -5,13 +5,11 @@ var hold = false;
 //set up jquery business hanlder
 $(document).on('mousedown', function(){
     // down = true;
-    console.log("docuemtn down");
 });
 
 $(document).on('mouseup', function(){
     down = false;
     hold = false;
-    console.log("docuemnt mouseup");
 });
 
 

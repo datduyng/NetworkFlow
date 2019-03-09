@@ -2,11 +2,8 @@ function Tile(type, tileSize){
 	this.type = type; 
 
 	this.texture;
-	if(this.type === 'grass'){
-		this.texture = PIXI.Texture.fromImage(spritePath[0]);
-	}else if(this.type === 'ground'){
-		this.texture = PIXI.Texture.fromImage(spritePath[1]);
-	}
+	this.swapTexture(type);// configure the right
+    // texture for tiel
 	//inheritance with Sprite class
 	PIXI.Sprite.call(this, this.texture, tileSize, tileSize);
 	this.position.x = 0;// set initial position
@@ -32,21 +29,21 @@ Tile.prototype.setXY = function(x, y){
 Tile.prototype.swapTexture = function(type){
 	this.type = type; 
 
-	if(this.type === 'grass'){
+	if(this.type == 'grass'){
 		this.texture = PIXI.Texture.fromImage(spritePath[0]);
-	}else if(this.type === 'ground'){
+	}else if(this.type == 'ground'){
 		this.texture = PIXI.Texture.fromImage(spritePath[1]);
-	}else if(this.type === 'road-horizontal'){
+	}else if(this.type == 'road-horizontal'){
 		this.texture = PIXI.Texture.fromImage(spritePath[2]);
-	}else if(this.type === 'road-verticle'){
+	}else if(this.type == 'road-verticle'){
 		this.texture = PIXI.Texture.fromImage(spritePath[3]);
-	}else if(this.type === 'intersection'){
+	}else if(this.type == 'intersection'){
 		this.texture = PIXI.Texture.fromImage(spritePath[4]);
-	}else if(this.type === 'construction-man'){
+	}else if(this.type == 'construction-man'){
 		this.texture = PIXI.Texture.fromImage(spritePath[5]);
-	}else if(this.type === 'construction-barrier'){
+	}else if(this.type == 'construction-barrier'){
 		this.texture = PIXI.Texture.fromImage(spritePath[6]);
-	}else if(this.type === 'car'){
+	}else if(this.type == 'car'){
         var x = this.position.x + tileSize/2;
         var y = this.position.y + tileSize/2;
 
@@ -64,20 +61,16 @@ Tile.prototype.swapTexture = function(type){
 Tile.prototype.setInteractive = function(){
 	this.interactive = true;
     this.on('mouseover', (event) => {
-        console.log("hover");
         this.tint = 0xB27D7D;
         if(down){// if hover and mouse down
-            console.log("hover and mouse down");
             //build here
             this.swapTexture(currentTileType)
         }
         renderer.render(stage);
     }).on('mouseout', (event) => {
-        console.log("mouseout");
         	this.tint = 0xFFFFFF;
             renderer.render(stage);
     }).on('mousedown', (event) => {
-        console.log("mousedown");
         down = true;
         hold = true;
        	this.swapTexture(currentTileType);
