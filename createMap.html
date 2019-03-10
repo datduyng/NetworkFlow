@@ -47,6 +47,19 @@
     } 
     .center-btn { text-align: center }
     /*.btn {background-color: #ffab91;}*/
+    .visualize-car-orientation {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 5px;
+    }
+
+    .rotated {
+      transform: rotate(90deg);
+      -ms-transform: rotate(90deg); /* IE 9 */
+      -moz-transform: rotate(90deg); /* Firefox */
+      -webkit-transform: rotate(90deg); /* Safari and Chrome */
+      -o-transform: rotate(90deg); /* Opera */
+    }
 </style>
 
 
@@ -126,17 +139,25 @@
                                     <br />
                 Block: &emsp;<a id="constructionManBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'construction-man';">Construction Man</a>
                        &emsp;<a id="constructionBarierBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'construction-barrier';">Construction Barrier</a>
+                       <br><br />
 
+                Car: &emsp;<a id="carBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'car';">Car</a><img src="./images/sim-asset/car.png" class="visualize-car-orientation"></img>
+                     <img src="./images/sim-asset/arrow.png" class="visualize-car-orientation"></img>
+                     <a class="btn-floating btn-small blue" onclick="rotateVisualization();"><i class="small material-icons">rotate_90_degrees_ccw</i></a>
                        <br /> <br />
                     ---------------------------<br />
                 Export to: &emsp;<a id="constructionBarierBtn" class="waves-effect waves-light btn" onclick="
                     exportCSV('simulation-map.csv', null);
                 ">.csv<i class="material-icons right">send</i></a>
-                           &emsp;<a id="constructionBarierBtn" class="waves-effect waves-light btn disabled" onclick="currentTileType = 'construction-barrier';">JSON <i class="material-icons right">send</i></a>
+                           &emsp;<a id="constructionBarierBtn" class="waves-effect waves-light btn" onclick="
+                           exportJSON('simulation-map.json', null);">
+                           JSON 
+                           <i class="material-icons right">send</i></a>
             </div>
         </div>
-
+        <script type="text/javascript" src="./Car.js"></script>
         <script type="text/javascript" src="./Tile.js"></script>
+        <script type="text/javascript" src="./SimulatorMap.js"></script>
         <script src="./app.js"></script>
     </div>
 
