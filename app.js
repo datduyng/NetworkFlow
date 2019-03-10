@@ -61,6 +61,8 @@ function _carListToJSON(){
 
 function getAppInfo(){
     return JSON.stringify({
+        'numHeight':simulatorMap.numH, 
+        'numWidth':simulatorMap.numW,
         'tiles': simulatorMap.toJSON(), 
         'cars' : _carListToJSON()
     });
