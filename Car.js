@@ -25,10 +25,10 @@ Car.prototype.setY = function(y){
 	this.position.y = y;
 }
 
-Car.prototype.getContent = function(){
-	return {
+Car.prototype.toString = function(){
+	return JSON.stringify({
 		'x' : this.position.x,
 		'y' : this.position.y,
 		'direction' : this.direction,
-	};
+	});
 }

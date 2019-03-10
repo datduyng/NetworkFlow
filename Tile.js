@@ -84,3 +84,7 @@ Tile.prototype.setInteractive = function(){
 
 Tile.prototype.getContent = function(){
 }
+
+Tile.prototype.toString = function(){
+    return this.type;
+}

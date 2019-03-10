@@ -49,12 +49,45 @@ function exportCSV(filename, csv){
 }
 
 
+function _carListToJSON(){
+    var result = []; 
+    for(var i=0;i<carList.length;i++){
+        var inStr = carList[i].toString();
+        var obj = JSON.parse(inStr);
+        result.push(obj);
+    }
+    return result;
+}
+
+function getAppInfo(){
+    return JSON.stringify({
+        'tiles': simulatorMap.toJSON(), 
+        'cars' : _carListToJSON()
+    });
+}
+
+
+
+function exportJSON(fileName, json){
+    if(json == null) json = getAppInfo(); 
+    if (fileName == null) fileName = 'export.json';
+
+    json = "data:text/json;charset=utf-8," + json;
+    var data = encodeURI(json); 
+    var link; 
+    link = document.createElement('a');
+    link.setAttribute('href', data); 
+    link.setAttribute('download', fileName); 
+    link.click(); 
+}
+
+
 var degree = 0;
 /**
  * THis rotate the car and arrow help user visualize the dir
  */
 function rotateVisualization(){
-    degree += 90%360;//ensure to be in range [0,270]
+    degree = (degree+90)%360;//ensure to be in range [0,270]
     $('.visualize-car-orientation').css({
       'transform': 'rotate(' + degree + 'deg)',
       '-ms-transform': 'rotate(' + degree + 'deg)',
