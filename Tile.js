@@ -27,23 +27,25 @@ Tile.prototype.setXY = function(x, y){
 }
 
 Tile.prototype.swapTexture = function(type){
-	this.type = type; 
+    if(type != 'car'){//change tile to new type// except for car
+        this.type = type;
+    }
 
-	if(this.type == 'grass'){
+	if(type == 'grass'){
 		this.texture = PIXI.Texture.fromImage(spritePath[0]);
-	}else if(this.type == 'ground'){
+	}else if(type == 'ground'){
 		this.texture = PIXI.Texture.fromImage(spritePath[1]);
-	}else if(this.type == 'road-horizontal'){
+	}else if(type == 'road-horizontal'){
 		this.texture = PIXI.Texture.fromImage(spritePath[2]);
-	}else if(this.type == 'road-verticle'){
+	}else if(type == 'road-verticle'){
 		this.texture = PIXI.Texture.fromImage(spritePath[3]);
-	}else if(this.type == 'intersection'){
+	}else if(type == 'intersection'){
 		this.texture = PIXI.Texture.fromImage(spritePath[4]);
-	}else if(this.type == 'construction-man'){
+	}else if(type == 'construction-man'){
 		this.texture = PIXI.Texture.fromImage(spritePath[5]);
-	}else if(this.type == 'construction-barrier'){
+	}else if(type == 'construction-barrier'){
 		this.texture = PIXI.Texture.fromImage(spritePath[6]);
-	}else if(this.type == 'car'){
+	}else if(type == 'car'){
         var x = this.position.x + tileSize/2;
         var y = this.position.y + tileSize/2;
 
