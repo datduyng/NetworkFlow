@@ -90,10 +90,11 @@ Tile.prototype.getContent = function(){
 }
 
 Tile.prototype.toString = function(){
-    if(this.type == 'road-horizontal' || this.type == 'road-verticle' || 
-       this.type == 'construction-man' || this.type == 'construction-barrier' || 
+    if(this.type == 'road-horizontal' || this.type == 'road-verticle'){
+         return 'road';
+    }else if(this.type == 'construction-man' || this.type == 'construction-barrier' || 
        this.type == 'grass'){
-        return 'road';
+        return 'ground';
     }
     return this.type;
 }
