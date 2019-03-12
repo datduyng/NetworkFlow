@@ -128,8 +128,8 @@
 
                 </div>
               </form>
-                Traffic Component: &emsp;<a id="intersectionBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'intersection';">Stop Sign</a> 
-                                   &emsp;<a id="intersectionBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'intersection';">Traffic Lights</a><br />
+                Traffic Component: &emsp;<a id="intersectionBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'stop-sign';">Stop Sign</a> 
+                                   &emsp;<a id="intersectionBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'traffic-light';">Traffic Lights</a><br />
                                      <br />
                 Tile Type: &emsp;<a id="groundBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'ground';">Ground</a>
                            &emsp;<a id="grassBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'grass';">Grass</a>
@@ -143,7 +143,25 @@
 
                 Car: &emsp;<a id="carBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'car';">Car</a><img src="./images/sim-asset/car.png" class="visualize-car-orientation"></img>
                      <img src="./images/sim-asset/arrow.png" class="visualize-car-orientation"></img>
-                     <a class="btn-floating btn-small blue" onclick="rotateVisualization();"><i class="small material-icons">rotate_90_degrees_ccw</i></a>
+                     <a class="btn-floating btn-small blue" onclick="rotateVisualization();"><i class="small material-icons">rotate_90_degrees_ccw</i></a><br>
+                <div class="row">
+                  <form class="col s12">
+                    <div class="col s12">
+                      Stopping point:
+                      <div class="input-field inline">
+                        <input id="text" type="text" class="validate">
+                        <label for="text">x</label>
+                        <span class="helper-text" data-error="wrong" data-success="right"></span>
+                      </div>
+                      <div class="input-field inline">
+                        <input id="text" type="text" class="validate">
+                        <label for="text">y</label>
+                        <span class="helper-text" data-error="wrong" data-success="right"></span>
+                      </div>
+                    </div>
+
+                  </form>
+                </div>
                        <br /> <br />
                     ---------------------------<br />
                 Export to: &emsp;<a id="constructionBarierBtn" class="waves-effect waves-light btn" onclick="

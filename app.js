@@ -17,7 +17,7 @@ var carList = [];
 
 let sprites = {}; 
 
-PIXI.loader.add(spritePath).load(setup);
+PIXI.loader.add(dict2Arr(spritePath)).load(setup);
 
 let sheet;
 

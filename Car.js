@@ -1,5 +1,5 @@
 function Car(x, y, degree){
-	this.texture = PIXI.Texture.fromImage(spritePath[7]);
+	this.texture = PIXI.Texture.fromImage(spritePath['car']);
 	PIXI.Sprite.call(this, this.texture, tileSize/2,tileSize); 
 	this.position.x = x;// set initial position
 	this.position.y = y;

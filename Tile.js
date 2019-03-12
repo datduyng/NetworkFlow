@@ -32,19 +32,21 @@ Tile.prototype.swapTexture = function(type){
     }
 
 	if(type == 'grass'){
-		this.texture = PIXI.Texture.fromImage(spritePath[0]);
+		this.texture = PIXI.Texture.fromImage(spritePath[type]);
 	}else if(type == 'ground'){
-		this.texture = PIXI.Texture.fromImage(spritePath[1]);
+		this.texture = PIXI.Texture.fromImage(spritePath[type]);
 	}else if(type == 'road-horizontal'){
-		this.texture = PIXI.Texture.fromImage(spritePath[2]);
+		this.texture = PIXI.Texture.fromImage(spritePath[type]);
 	}else if(type == 'road-verticle'){
-		this.texture = PIXI.Texture.fromImage(spritePath[3]);
-	}else if(type == 'intersection'){
-		this.texture = PIXI.Texture.fromImage(spritePath[4]);
-	}else if(type == 'construction-man'){
-		this.texture = PIXI.Texture.fromImage(spritePath[5]);
+		this.texture = PIXI.Texture.fromImage(spritePath[type]);
+	}else if(type == 'stop-sign'){
+		this.texture = PIXI.Texture.fromImage(spritePath[type]);
+	}else if(type == 'traffic-light'){
+        this.texture = PIXI.Texture.fromImage(spritePath[type])
+    }else if(type == 'construction-man'){
+		this.texture = PIXI.Texture.fromImage(spritePath[type]);
 	}else if(type == 'construction-barrier'){
-		this.texture = PIXI.Texture.fromImage(spritePath[6]);
+		this.texture = PIXI.Texture.fromImage(spritePath[type]);
 	}else if(type == 'car'){
         var x = this.position.x + tileSize/2;
         var y = this.position.y + tileSize/2;
@@ -88,5 +90,10 @@ Tile.prototype.getContent = function(){
 }
 
 Tile.prototype.toString = function(){
+    if(this.type == 'road-horizontal' || this.type == 'road-verticle' || 
+       this.type == 'construction-man' || this.type == 'construction-barrier' || 
+       this.type == 'grass'){
+        return 'road';
+    }
     return this.type;
 }

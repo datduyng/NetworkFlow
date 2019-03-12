@@ -13,16 +13,30 @@ $(document).on('mouseup', function(){
 });
 
 
-var spritePath = [
-    "images/sim-asset/grass.png",//0
-    "images/sim-asset/ground.png",//1
-    "images/sim-asset/road-horizontal.png",//2
-    "images/sim-asset/road-verticle.png",//3
-    "images/sim-asset/intersection.png",//4
-    "images/sim-asset/construction-man.png",//5
-    "images/sim-asset/construction-barrier.png",//6
-    "images/sim-asset/car.png"//7
-];
+var spritePath = {
+    'grass' : 'images/sim-asset/grass.png', 
+    'ground' : 'images/sim-asset/ground.png', 
+    'road-horizontal' : 'images/sim-asset/road-horizontal.png', 
+    'road-verticle' : 'images/sim-asset/road-verticle.png', 
+    'stop-sign' : 'images/sim-asset/stop-sign.png', 
+    'traffic-light' : 'images/sim-asset/traffic-light.png', 
+    'construction-man' : 'images/sim-asset/construction-man.png', 
+    'construction-barrier' : 'images/sim-asset/construction-barrier.png', 
+    'car' : 'images/sim-asset/car.png'
+};
+
+
+function dict2Arr(dict){
+    var arr =[];
+    for (var key in dict) {
+        if (dict.hasOwnProperty(key)) {
+            arr.push(dict[key]);
+        }
+    }
+
+    return arr;
+
+}
 
 var currentTileType = 'grass';
 

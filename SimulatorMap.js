@@ -68,7 +68,7 @@ SimulatorMap.prototype.toCSV = function(){
     var csv = "";
     for(var y =0;y<this.numH;y++){
         for(var x=0;x<this.numW;x++){
-            csv += this.simMap[y][x].type;
+            csv += this.simMap[y][x].toString();
             if(x != this.numW-1)
             	csv += ',';
         }
@@ -88,7 +88,7 @@ SimulatorMap.prototype.toJSON = function(){
 
     for(var y=0;y<this.numH;y++){
         for(var x=0;x<this.numW;x++){
-            result[y][x] = this.simMap[y][x].type;
+            result[y][x] = this.simMap[y][x].toString();
         }
     }
     return result;
