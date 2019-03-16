@@ -89,6 +89,7 @@ Tile.prototype.setInteractive = function(){
 Tile.prototype.getContent = function(){
 }
 
+
 Tile.prototype.toString = function(){
     if(this.type == 'road-horizontal' || this.type == 'road-verticle'){
          return 'road';

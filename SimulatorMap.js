@@ -79,6 +79,43 @@ SimulatorMap.prototype.toCSV = function(){
 
 
 
+SimulatorMap.prototype.getTileObjects = function(x, y){
+    if(this.simMap[y][x].type == "stop-sign" || 
+       this.simMap[y][x].type == "traffic-light"){
+        var possibleDirections = ""; 
+
+        if(y < this.numH-2){
+            if(this.simMap[y+1][x].type == "road-horizontal" || this.simMap[y+1][x].type == "road-verticle"){
+                possibleDirections += "v";
+            }
+        }
+        
+        if(y > 0)  
+            if(this.simMap[y-1][x].type == "road-horizontal" || this.simMap[y-1][x].type == 'road-verticle')
+                possibleDirections += "^";
+        
+        if(x < this.numW-2)
+            if(this.simMap[y][x+1].type == "road-horizontal" || this.simMap[y][x+1].type == 'road-verticle')
+                possibleDirections += ">";
+            
+
+        if(x > 0)
+            if(this.simMap[y][x-1].type =="road-horizontal" || this.simMap[y][x-1].type == 'road-verticle')
+                possibleDirections += "<";
+            
+        return {
+            "type" : this.simMap[y][x].type, 
+            "built-directions" : possibleDirections
+        };
+    }
+
+    return {
+        "type" : this.simMap[y][x].type
+    };
+
+
+}
+
 //base on: http://actionsnippet.com/?p=1227
 SimulatorMap.prototype.toJSON = function(){
     var result = []; 
@@ -88,7 +125,9 @@ SimulatorMap.prototype.toJSON = function(){
 
     for(var y=0;y<this.numH;y++){
         for(var x=0;x<this.numW;x++){
-            result[y][x] = this.simMap[y][x].toString();
+            // result[y][x] = this.simMap[y][x].toString();
+
+            result[y][x] = this.getTileObjects(x, y);
         }
     }
     return result;
