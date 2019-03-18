@@ -1,153 +1,150 @@
-<!DOCTYPE html>
-<html lang="en">
 
-  <head>
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+<!doctype html>
+<html>
 
-    <title>City Boost</title>
-
-    <!-- Include Style sheet? -->
-    <link rel="stylesheet" type="text/css" href="style.css"> 
-
-    
-    
+<head>
 
     <!-- Bootstrap core JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<!--     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script> -->
     <script type="text/javascript" src="js-lib/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="js-lib/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Bootstrap core CSS -->
     <link href="js-lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- LOGO on browser bar -->
-    <link rel="icon" href="./images/webflow.png">
-  </head>
-
-  <body>
-
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light static-top">
-      <div class="container">
-        <a class="navbar-brand" href="./index.html"><img style=" width: 64px;" src="./images/webflow.png" alt="Dispute Bills">
-        </a>
-
-        <!-- <a class="navbar-brand" href="./index.html">Webflow</a> -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="nav navbar-nav ml-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="#">Home
-                <span class="sr-only">(current)</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="./cityBoost.html">City Boost</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="./about.html">About</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Services</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Contact</a>
-            </li>
-
-              <li class="dropdown">
-                <a class="dropdown-toggle nav-link" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                  <li><a class="nav-link" href="#">Action</a></li>
-                  <li><a class="nav-link" href="#">Another action</a></li>
-                  <li><a class="nav-link" href="#">Something else here</a></li>
-                  <li class="divider"></li>
-                  <li><a class="nav-link" href="#">Separated link</a></li>
-                </ul>
-              </li>
-          </ul>
+    <script type="text/javascript" src="./js-lib/jquery/jquery.min.js"></script>
+    <script src="./js-lib/pixi/pixi.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.4.3/pixi.min.js"></script> -->
+    <!-- <script src="./js-lib/pixi-tilemap/pixi-tilemap.js"></script> -->
 
 
-        </div>
-      </div>
-    </nav>
+    <!-- Materialize? -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
-    <!-- handle auto drop down when hover over -->
-    <script type="text/javascript">
-      $("li.dropdown").hover(
-          function () {
-              $('ul.dropdown-menu').finish().slideDown('slow');
-          },
-          function () {
-              $('ul.dropdown-menu').finish().slideUp('slow');
-          }
-      );
-    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
 
+</head>
+<body class="container">
 
+<!-- Nav bar -->
+<!-- https://stackoverflow.com/questions/42435938/simple-materialize-ui-responsive-side-menu -->
+<style type="text/css">
 
-    <!---------------------- Page Content ---------------------->
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12 text-center">
-          <h1 class="mt-5">Welcome to Webflow!</h1>
-          <p class="lead">If you a type of group whose would like to have total wireless control to your business and aptempt to deliver service to your customer. Oh well, Then do we have a solution for you. At webflow, we believe in better solution for your business. we attempt to help by deliver agile software service that bring your business to the next level. We work with your team to deliver robust service that improve customer management. We don't speak our own words. Our customer speak our voice.</p>
-        </div>
-
-          
+</style>
 
 
-      </div>
-      <div class="text-justify">Our Customers:</div>
-        <ul class="list-unstyled">
-          <li>City Boost</li>
-          <li>Geegle</li>
-          <li>headBook</li>
+<!---------------------- Start side nav bar ---------------------->
+<div>
+<div class="col-md-4" id="container">
+
+  <div id="menu">
+
+    <ul id="slide-out" class="side-nav fixed show-on-large-only">
+      <li><a href="index.html">Project Overview</a></li>
+      <li><a href="createMap.html">Java FX version</a></li>
+      <li><a href="createMap.html">Create Map</a></li>
+      <li><a href="simulation.html">Simulation</a></li>
+      <li class="no-padding">
+        <ul class="collapsible collapsible-accordion">
+          <li>
+            <a class="collapsible-header">Docs<i class="material-icons">arrow_drop_down</i></a>
+            <div class="collapsible-body">
+              <ul>
+                <li><a href="#!">JS API</a></li>
+                <li><a href="#!">JavaFx API</a></li>
+              </ul>
+            </div>
+          </li>
         </ul>
+      </li>
+    </ul>
+  </div>
 
-        <!-- DISPLAY OUR CUSTOMER LOGO -->
-        <div class="row">
-          <div class="col-md-4">
-              <a href="/w3images/lights.jpg">
-                <img src="./images/cityboost01.png" alt="Lights" style="width:70%">
-                <div class="caption">
-                </div>
-              </a>
-          </div>
-          <div class="col-md-4">
-              <a href="/w3images/nature.jpg">
-                <img src="./images/geegle.png" alt="Nature" style="width:70%">
-                <div class="caption">
-                </div>
-              </a>
-          </div>
-          <div class="col-md-4">
-              <a href="/w3images/fjords.jpg">
-                <img src="./images/headbook.png" alt="Fjords" style="width:70%">
-                <div class="caption">
-                </div>
-              </a>
+
+    <div id="content">
+        <a href="#" data-activates="slide-out" class="button-collapse hide-on-large-only"><i class="material-icons">menu</i></a>
+    </div>
+    <script type="text/javascript">
+        $('.button-collapse').sideNav({
+            menuWidth: 200, // Default is 300
+            edge: 'left', // Choose the horizontal origin
+            closeOnClick: false, // Closes side-nav on <a> clicks, useful for Angular/Meteor
+            draggable: true // Choose whether you can drag to open on touch screens
+        });
+    </script>
+</div>
+
+<!--------------------- end side nav bar ------------------------->
+
+<div class="container">
+  <div class="row">
+
+    <div class="col s12 m13 offset-m1 xl7 offset-xl1">
+
+      <div class="section">
+
+        <div id="headers" class="section scrollspy">
+          <h3 class="header">NetFlow</h3>
+          <p>We provide some basic styling on header tags. In the example, you can see the the 6 header tags' different sizes.</p>
+          <div class="card-panel">
           </div>
         </div>
 
-        <!-- Another row of CUSTOMER logo -->
-        <br><br>
-        <div class="row">
-          <div class="col-md-4">
-              <a href="/w3images/lights.jpg">
-                <img src="./images/mcgoogle.jpg" alt="Lights" style="width:70%">
-                <div class="caption">
-                </div>
-              </a>
+        <div id="blockquote" class="section scrollspy">
+          <h3 class="header">Blockquotes</h3>
+          <p>
+            Blockquotes are mainly used to give emphasis to a quote or citation. You can also use these for some extra text hierarchy and emphasis.
+            </p>
+          <blockquote>
+            This is an example quotation that uses the blockquote tag.
+            <br>Here is another line to make it look bigger.
+          </blockquote>
+          <pre><code class="language-markup">
+    &lt;blockquote>
+      This is an example quotation that uses the blockquote tag.
+    &lt;/blockquote>
+          </code></pre>
+        </div>
+
+        <div id="flow" class="section scrollspy">
+          <h3 class="header">Flow Text</h3>
+          <a id="flow-toggle" class="btn waves-effect waves-light">Toggle flow-text</a>
+          <div id="flow-text-demo" class="card-panel">
+          <p class="flow-text">
+          One common flaw we've seen in many frameworks is a lack of support for truly responsive text. While elements on the page resize fluidly, text still resizes on a fixed basis. To ameliorate this problem, for text heavy pages, we've created a class that fluidly scales text size and line-height to optimize readability for the user. Line length stays between 45-80 characters and line height scales to be larger on smaller screens.</p>
+          <p class="flow-text">To see Flow Text in action, slowly resize your browser and watch the size of this text body change! Use the button above to toggle off/on flow-text to see the difference!</p>
           </div>
+
+          <br>
+
+          <p>To use flow-text on a body of text, simply just add the class <code class="language-markup">flow-text</code> to a tag, see the code below.</p>
+          <pre><code class="language-markup">
+    &lt;p class="flow-text">I am Flow Text&lt;/p>
+          </code></pre>
+        </div>
+
       </div>
 
+    </div>
+    <div class="col hide-on-small-only m3 xl3 offset-xl1">
+      <div class="toc-wrapper">
+        <div style="height: 1px;">
+          <ul class="section table-of-contents">
+            <li><a href="#headers">Headers</a></li>
+            <li><a href="#blockquote">Blockquotes</a></li>
+            <li><a href="#flow">Flow Text</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> <!-- End Container -->
 
 
-  </body>
+<!-- </fieldset> -->
 
+
+</body>
 </html>

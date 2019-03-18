@@ -71,17 +71,17 @@
 
     <ul id="slide-out" class="side-nav fixed show-on-large-only">
       <li><a href="index.html">Project Overview</a></li>
+      <li><a href="createMap.html">Java FX version</a></li>
       <li><a href="createMap.html">Create Map</a></li>
+      <li><a href="simulation.html">Simulation</a></li>
       <li class="no-padding">
         <ul class="collapsible collapsible-accordion">
           <li>
-            <a class="collapsible-header">Dropdown<i class="material-icons">arrow_drop_down</i></a>
+            <a class="collapsible-header">Docs<i class="material-icons">arrow_drop_down</i></a>
             <div class="collapsible-body">
               <ul>
-                <li><a href="#!">First</a></li>
-                <li><a href="#!">Second</a></li>
-                <li><a href="#!">Third</a></li>
-                <li><a href="#!">Fourth</a></li>
+                <li><a href="#!">JS API</a></li>
+                <li><a href="#!">JavaFx API</a></li>
               </ul>
             </div>
           </li>
@@ -121,6 +121,10 @@
                   <div class="btn">
                     <span>Load .csv</span><i class="material-icons right">call_received</i>
                     <input id="uploadcsv" type="file">
+                  </div>
+                  <div class="btn">
+                    <span>Load .JSON</span><i class="material-icons right">call_received</i>
+                    <input id="uploadjson" type="file">
                   </div>
                   <div class="file-path-wrapper">
                     <input class="file-path validate" type="text">
@@ -174,9 +178,15 @@
             </div>
         </div>
         <script type="text/javascript" src="./Car.js"></script>
+        <script type="text/javascript" src="./Ground.js"></script>
+        <script type="text/javascript" src="./StopSign.js"></script>
+        <script type="text/javascript" src="./Road.js"></script>
+        <script type="text/javascript" src="./TrafficLight.js"></script>
         <script type="text/javascript" src="./Tile.js"></script>
+        
+        
         <script type="text/javascript" src="./SimulatorMap.js"></script>
-        <script src="./app.js"></script>
+        <script src="./createMap.js"></script>
     </div>
 
 <!-- </fieldset> -->
