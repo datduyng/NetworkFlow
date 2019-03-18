@@ -1,12 +1,17 @@
-function SimulatorMap(stage, width, height, tileSize){
-	this.width = width; 
-	this.height = height; 
+
+function SimulatorMap(stage, renderer, numW, numH, tileSize){
+	this.width; 
+	this.height; 
 	this.tileSize = tileSize;
-	this.numW = this.width/tileSize;
-	this.numH = this.height/tileSize;
+	this.numW = numW;
+	this.numH = numH;
     this.stage = stage; 
+    this.renderer = renderer;
     this._initMap();
 }
+
+this.width = WIDTH; 
+this.height = HEIGHT;
 
 SimulatorMap.prototype._clearMap = function(){
     for(var x =0;x<this.numW;x++)
@@ -24,11 +29,9 @@ SimulatorMap.prototype.setupMapFromCSV = function(csvString){
     var tokens = []; 
     
     this._initMap();
-    console.log('line_lathn'+lines.length);
     for(var y=0;y<lines.length;y++){
         tokens = lines[y].split(',');
         if(y == 12)
-            console.log('Spcial'+tokens);
         for(var x=0;x<this.numW;x++){
             if(tokens[x] == ""|| tokens[x] == null) {
                 console.log("Error When Loading");
@@ -47,7 +50,7 @@ SimulatorMap.prototype.setupMapFromCSV = function(csvString){
 SimulatorMap.prototype._initMap = function() {
     this.simMap = [];
 	for(i = 0;i < this.numH;i++){
-	    this.  simMap[i] = new Array(this.numW);
+	    this.simMap[i] = new Array(this.numW);
 	}
 };
 
@@ -59,7 +62,7 @@ SimulatorMap.prototype.setupMap = function(){
             //setup sprite event here
             this.simMap[y][x].setInteractive();
             this.simMap[y][x].setIndexXY(x, y); 
-            this.stage.addChild(this.simMap[y][x]);
+            this.stage.addChild(this.simMap[y][x].tileClass);
         }
     }
 }
@@ -80,6 +83,7 @@ SimulatorMap.prototype.toCSV = function(){
 
 
 SimulatorMap.prototype.getTileObjects = function(x, y){
+
     if(this.simMap[y][x].type == "stop-sign" || 
        this.simMap[y][x].type == "traffic-light"){
         var possibleDirections = ""; 
@@ -104,13 +108,15 @@ SimulatorMap.prototype.getTileObjects = function(x, y){
                 possibleDirections += "<";
             
         return {
-            "type" : this.simMap[y][x].type, 
-            "built-directions" : possibleDirections
+            "generalType" : this.simMap[y][x].tileClass.generalType,
+            "classType" : this.simMap[y][x].tileClass.classType,
+            "builtDirections" : possibleDirections
         };
     }
 
     return {
-        "type" : this.simMap[y][x].type
+        "generalType" : this.simMap[y][x].tileClass.generalType,
+        "classType" : this.simMap[y][x].tileClass.classType
     };
 
 
@@ -126,9 +132,10 @@ SimulatorMap.prototype.toJSON = function(){
     for(var y=0;y<this.numH;y++){
         for(var x=0;x<this.numW;x++){
             // result[y][x] = this.simMap[y][x].toString();
-
             result[y][x] = this.getTileObjects(x, y);
         }
     }
     return result;
 }
+
+
