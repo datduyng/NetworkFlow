@@ -15,8 +15,10 @@ this.height = HEIGHT;
 
 SimulatorMap.prototype._clearMap = function(){
     for(var x =0;x<this.numW;x++)
-        for(var y=0;y<this.numH;y++)
+        for(var y=0;y<this.numH;y++){
             this.stage.removeChild(this.simMap[y][x]);
+            this.simMap[y][x] = null;
+        }
 }
 
 
@@ -52,6 +54,7 @@ SimulatorMap.prototype._initMap = function() {
 	for(i = 0;i < this.numH;i++){
 	    this.simMap[i] = new Array(this.numW);
 	}
+
 };
 
 SimulatorMap.prototype.setupMap = function(){
@@ -63,8 +66,11 @@ SimulatorMap.prototype.setupMap = function(){
             this.simMap[y][x].setInteractive();
             this.simMap[y][x].setIndexXY(x, y); 
             this.stage.addChild(this.simMap[y][x].tileClass);
+
         }
     }
+    this.renderer.render(this.stage);
+
 }
 
 SimulatorMap.prototype.toCSV = function(){
@@ -81,36 +87,41 @@ SimulatorMap.prototype.toCSV = function(){
 }
 
 
+SimulatorMap.prototype.getBuiltDirections = function(x, y){
+
+    var possibleDirections = ""; 
+
+    if(y < this.numH-2){
+        if(this.simMap[y+1][x].tileClass.classType == "road-horizontal" || this.simMap[y+1][x].tileClass.classType == "road-verticle"){
+            possibleDirections += "v";
+        }
+    }
+    
+    if(y > 0)  
+        if(this.simMap[y-1][x].tileClass.classType == "road-horizontal" || this.simMap[y-1][x].tileClass.classType == 'road-verticle')
+            possibleDirections += "^";
+    
+    if(x < this.numW-2)
+        if(this.simMap[y][x+1].tileClass.classType == "road-horizontal" || this.simMap[y][x+1].tileClass.classType == 'road-verticle')
+            possibleDirections += ">";
+        
+
+    if(x > 0)
+        if(this.simMap[y][x-1].tileClass.classType =="road-horizontal" || this.simMap[y][x-1].tileClass.classType == 'road-verticle')
+            possibleDirections += "<";
+    return possibleDirections;
+}
+
 
 SimulatorMap.prototype.getTileObjects = function(x, y){
 
-    if(this.simMap[y][x].type == "stop-sign" || 
-       this.simMap[y][x].type == "traffic-light"){
-        var possibleDirections = ""; 
-
-        if(y < this.numH-2){
-            if(this.simMap[y+1][x].type == "road-horizontal" || this.simMap[y+1][x].type == "road-verticle"){
-                possibleDirections += "v";
-            }
-        }
-        
-        if(y > 0)  
-            if(this.simMap[y-1][x].type == "road-horizontal" || this.simMap[y-1][x].type == 'road-verticle')
-                possibleDirections += "^";
-        
-        if(x < this.numW-2)
-            if(this.simMap[y][x+1].type == "road-horizontal" || this.simMap[y][x+1].type == 'road-verticle')
-                possibleDirections += ">";
-            
-
-        if(x > 0)
-            if(this.simMap[y][x-1].type =="road-horizontal" || this.simMap[y][x-1].type == 'road-verticle')
-                possibleDirections += "<";
-            
+    if(this.simMap[y][x].tileClass.classType == "stop-sign" || 
+       this.simMap[y][x].tileClass.classType == "traffic-light"){
         return {
+            "id" : this.simMap[y][x].tileClass.id,
             "generalType" : this.simMap[y][x].tileClass.generalType,
             "classType" : this.simMap[y][x].tileClass.classType,
-            "builtDirections" : possibleDirections
+            "builtDirections" : this.getBuiltDirections(x, y),
         };
     }
 

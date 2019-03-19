@@ -14,6 +14,7 @@ var renderer = new PIXI.autoDetectRenderer(
 
 var simulatorMap;
 var carList = [];
+var trafficComponents = {};
 
 let sprites = {}; 
 
@@ -63,7 +64,8 @@ function getAppInfo(){
     return JSON.stringify({
         'numHeight':simulatorMap.numH, 
         'numWidth':simulatorMap.numW,
-        'tiles': simulatorMap.toJSON(), 
+        'tiles': simulatorMap.toJSON(),
+        'trafficComponents' : null, 
         'cars' : _carListToJSON()
     });
 }

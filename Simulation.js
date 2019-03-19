@@ -1,13 +1,12 @@
 class SimulationApp{
 	constructor(stage, renderer){
 		this.carList = []; 
-		this.trafficComponentList = [];
+		this.trafficComponents = {};
 
 		this.stage = stage; 
 		this.renderer = renderer; 
 		this.simulationMap = new SimulatorMap(this.stage, this.renderer, WIDTH/tileSize, HEIGHT/tileSize, tileSize);
 		this.simulationMap.setupMap();
-		this.renderer.render(this.stage);
 		this.restartState;
 	}
 
@@ -19,17 +18,25 @@ class SimulationApp{
 
 	    var tiles = jsonObj['tiles'];
 
+	    this.simulationMap._clearMap();
+	    this.simulationMap = new SimulatorMap(this.stage, this.renderer, numWidth, numHeight, tileSize);
 
-	    this.simulatorMap = new SimulatorMap(this.stage, this.renderer, numWidth, numHeight, tileSize);
 
 	    for(var y=0;y<numHeight;y++){
 	        for(var x=0;x<numWidth;x++){
-	            this.simulatorMap.simMap[y][x] = new Tile(tiles[y][x].classType, tileSize);
-	            this.simulatorMap.simMap[y][x].setXY(x*tileSize, y*tileSize);
-	            this.simulatorMap.simMap[y][x].setInteractive();
-	            this.simulatorMap.simMap[y][x].setIndexXY(x, y); 
-	            this.stage.addChild(this.simulatorMap.simMap[y][x].tileClass);
-	            this.renderer.render(this.stage);
+	            this.simulationMap.simMap[y][x] = new Tile(tiles[y][x].classType, tileSize);
+
+	            //set built direction for intersection
+	            if(tiles[y][x].classType == 'STOP-sign' || 
+	               tiles[y][x].classType == 'traffic-light'){
+	            	this.simulationMap.simMap[y][x].tileClass.builtDirections = tiles[y][x]['builtDirections'];
+	            	//assume that componentIdAssigner only got iterate in new Tile
+	            	this.trafficComponents[componentIdAssigner] = this.simulationMap.simMap[y][x];
+	            }
+	            this.simulationMap.simMap[y][x].setXY(x*tileSize, y*tileSize);
+	            this.simulationMap.simMap[y][x].setInteractive();
+	            this.simulationMap.simMap[y][x].setIndexXY(x, y); 
+	            this.stage.addChild(this.simulationMap.simMap[y][x].tileClass);
 	        }
 	    }
 	    var carListObjs = jsonObj['cars'];
@@ -39,9 +46,9 @@ class SimulationApp{
 	        var car = new Car(c['pixi.position.x'], c['pixi.position.y'],
 	                          c['xIndex'], c['yIndex'], c['direction']);
 	        this.stage.addChild(car); 
-	        this.renderer.render(this.stage);
 	        this.carList.push(car);
 	    }
+	    this.renderer.render(this.stage);
 	}
 	_carListToJSON(){
 	    var result = []; 
@@ -55,73 +62,40 @@ class SimulationApp{
 
 	getAppInfo(softwaretype){
 	    return JSON.stringify({
-	        'numHeight': this.simulatorMap.numH, 
-	        'numWidth': this.simulatorMap.numW,
-	        'tiles': this.simulatorMap.toJSON(softwaretype), 
+	        'numHeight': this.simulationMap.numH, 
+	        'numWidth': this.simulationMap.numW,
+	        'tiles': this.simulationMap.toJSON(softwaretype), 
 	        'cars' : this._carListToJSON()
 	    });
 	}
-
-	//@Static
-	getCarNextState(car){
-		var newState = null;
-		var nextTile = {
-			'>' : (car.xIndex < this.simulatorMap.numW-2)? 
-					this.simulatorMap.simMap[car.yIndex][car.xIndex+1].generalType:
-					'end-road', 
-			'<' : (car.xIndex > 1)?
-					this.simulatorMap.simMap[car.yIndex][car.xIndex-1].generalType:
-					'end-road',
-			'v' : (car.yIndex < this.simulatorMap.numH-2)?
-					this.simulatorMap.simMap[car.yIndex+1][car.xIndex].generalType:
-					'end-road',
-			'^' : (car.yIndex > 1)?
-					this.simulatorMap.simMap[car.yIndex-1][car.xIndex].generalType:
-					'end-road'
-		};
-		var transition = {
-			'idle' : 'acel',
-			'stop' : 'idle', 
-			'acel' : 'regular', 
-			'regular' : 'regular'
-		}; 
-		var prevState = car.state;
-
-		if(nextTile[car.direction] == 'road'){
-
-			newState = transition[prevState];
-		}else if(nextTile[car.direction] == 'traffic-light' || 
-				 nextTile[car.direction] == 'stop-sign'){
-			newState = nextTile[car.direction].carEnter(car);
-
-			if(newState == 'not-movable'){
-				newState = 'stop'; 
-			}else if(newState == 'movable'){
-				newState = transition[prevState];
-			}
-		}else if(nextTile[car.direction] == 'end-road'){
-			newState = 'stop';
-		}
-		return newState;
-	}
-
 	updateSimulation(){
 		for(var i=0;i<this.carList.length;i++){
 			var car = this.carList[i]; 
-			car.move(this.getCarNextState(car));
+			car.move();
 		}
 
 		//TODO: update component list as well
-		for(var i=0;i<this.trafficComponentList.length;i++){
-
+		// for(var i=0;i<this.trafficComponentList.length;i++){
+		// 	this.trafficComponentList[i].tileClass.update();
+		// }
+		for(var key in this.trafficComponents){
+			this.trafficComponents[key].tileClass.update();
 		}
 	}
 
+
 	restartSimulation(){
+		//restart all variable
+		this.trafficComponents = {}; 
+		this.carList = [];
+		carIdAssigner = 0; //TODO: make function call restart gloabl
+		componentIdAssigner = 0;
 		this.setupMapFromJSON(this.restartState);
 	}
 
 }
+
+
 
 var distBetween2Tile = 1/8; //mile 
 var TIME_UNIT = 10;//100 ms
@@ -170,6 +144,52 @@ function animate() {
     	requestAnimationFrame(animate);
 }
 
+
+function getCarNextState(car){
+	var newState = null;
+	var nextTile = {
+		'>' : (car.xIndex < simulationApp.simulationMap.numW-2)? 
+				simulationApp.simulationMap.simMap[car.yIndex][car.xIndex+1].tileClass:
+				'end-road', 
+		'<' : (car.xIndex > 1)?
+				simulationApp.simulationMap.simMap[car.yIndex][car.xIndex-1].tileClass:
+				'end-road',
+		'v' : (car.yIndex < simulationApp.simulationMap.numH-2)?
+				simulationApp.simulationMap.simMap[car.yIndex+1][car.xIndex].tileClass:
+				'end-road',
+		'^' : (car.yIndex > 1)?
+				simulationApp.simulationMap.simMap[car.yIndex-1][car.xIndex].tileClass:
+				'end-road'
+	};
+	var transition = {
+		'idle' : 'acel',
+		'STOP' : 'idle', 
+		'acel' : 'regular', 
+		'regular' : 'regular',
+		'moving-in-intersection' : 'regular'
+	}; 
+	var prevState = car.state;
+	if(nextTile[car.direction].generalType == 'road'){
+
+		newState = transition[prevState];
+	}else if(nextTile[car.direction].generalType == 'traffic-light' || 
+			 nextTile[car.direction].generalType == 'STOP-sign'){
+		if(prevState != 'moving-in-intersection')
+			newState = nextTile[car.direction].carEnter(car);
+		
+
+		console.log('newState', newState, 'prev', prevState);
+		if(newState == 'not-movable'){
+			newState = 'STOP'; 
+		}else if(newState == 'movable'){
+			newState = transition[prevState];
+		}
+	}else if(nextTile[car.direction].generalType == 'end-road'){
+		newState = 'STOP';
+	}
+	console.log("new state", newState);
+	return newState;
+}
 
 // Event Handler
 document.getElementById("uploadjson").addEventListener("change",loadJSON, true);
