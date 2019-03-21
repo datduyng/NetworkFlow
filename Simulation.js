@@ -178,10 +178,10 @@ function getCarNextState(car){
 			newState = nextTile[car.direction].carEnter(car);
 		
 
-		console.log('newState', newState, 'prev', prevState);
 		if(newState == 'not-movable'){
 			newState = 'STOP'; 
 		}else if(newState == 'movable'){
+			// decide new Direction.
 			newState = transition[prevState];
 		}
 	}else if(nextTile[car.direction].generalType == 'end-road'){

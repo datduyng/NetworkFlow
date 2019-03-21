@@ -122,16 +122,6 @@ function setupMapFromJSON(jsonObj){
     var numHeight = jsonObj['numHeight'];
     var numWidth = jsonObj['numWidth'];
 
-    var carListObjs = jsonObj['cars'];
-    carList = [];
-    for(var i=0;i<carList.length;i++){
-        var c = carListObjs[i]; 
-        var car = new Car(c['pixi.position.x'], c['pixi.position.y'],
-                          c['xIndex'], c['yIndex']);
-        stage.addChild(car); 
-        renderer.render(stage); 
-        carList.push(car);
-    }
 
     var tiles = jsonObj['tiles'];
 
@@ -147,6 +137,18 @@ function setupMapFromJSON(jsonObj){
             stage.addChild(simulatorMap.simMap[y][x].tileClass);
         }
     }
+
+    //load car
+    var carListObjs = jsonObj['cars'];
+    carList = [];
+    for(var i=0;i<carListObjs.length;i++){
+        var c = carListObjs[i]; 
+        var car = new Car(c['pixi.position.x'], c['pixi.position.y'],
+                          c['xIndex'], c['yIndex'], c['direction']);
+        stage.addChild(car); 
+        carList.push(car);
+    }
+    renderer.render(stage);
 
 }
 

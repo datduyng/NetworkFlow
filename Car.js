@@ -47,12 +47,12 @@ function Car(x, y, xIndex, yIndex,  degree){
 	this.state = 'idle';//'idle', 'regular', 'STOP', 
 
 	this.gapTime = {
-		'idle' : 1, // tick
+		'idle' : 100, // tick
 		// 'regular' : distBetween2Tile / this.speed * 3600 / (TIME_UNIT/1000), // tick
 		// 'acel' : distBetween2Tile / this.initalSpeed * 3600 / (TIME_UNIT/1000) // tick
 		'regular' : 60,
 		'moving-in-intersection' : 60,
-		'acel' : 120
+		'acel' : 200
 	};
 }
 Car.prototype = Object.create(PIXI.Sprite.prototype);
