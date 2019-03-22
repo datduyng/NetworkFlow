@@ -19,7 +19,8 @@ var spritePath = {
     'road-horizontal' : 'images/sim-asset/road-horizontal.png', 
     'road-verticle' : 'images/sim-asset/road-verticle.png', 
     'stop-sign' : 'images/sim-asset/stop-sign.png', 
-    'traffic-light' : 'images/sim-asset/traffic-light.png', 
+    'traffic-light-ns' : 'images/sim-asset/traffic-light-ns.png',
+    'traffic-light-we' : 'images/sim-asset/traffic-light-we.png',
     'construction-man' : 'images/sim-asset/construction-man.png', 
     'construction-barrier' : 'images/sim-asset/construction-barrier.png', 
     'car' : 'images/sim-asset/car.png'
@@ -44,3 +45,6 @@ var WIDTH =800;
 var HEIGHT = 600;
 
 var tileSize = 50;
+
+var carIdAssigner = 0; 
+var componentIdAssigner = 0;
