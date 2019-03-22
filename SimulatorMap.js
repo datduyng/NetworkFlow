@@ -135,17 +135,25 @@ SimulatorMap.prototype.getTileObjects = function(x, y){
 
 //base on: http://actionsnippet.com/?p=1227
 SimulatorMap.prototype.toJSON = function(){
-    var result = []; 
+
+    var result = new Array(2); 
+    var tiles = []; 
     for(i = 0;i < this.numH;i++){
-        result[i] = new Array(this.numW);
+        tiles[i] = new Array(this.numW);
     }
+    var componentList = [];
 
     for(var y=0;y<this.numH;y++){
         for(var x=0;x<this.numW;x++){
             // result[y][x] = this.simMap[y][x].toString();
-            result[y][x] = this.getTileObjects(x, y);
+            tiles[y][x] = this.getTileObjects(x, y);
+            if(tiles[y][x].generalType == 'stop-sign' || 
+               tiles[y][x].generalType == 'traffic-light'){
+                componentList.push(tiles[y][x]);
+            }
         }
     }
+    result[0] = tiles; result[1] = componentList;
     return result;
 }
 

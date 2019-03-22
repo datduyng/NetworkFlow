@@ -61,11 +61,12 @@ function _carListToJSON(){
 }
 
 function getAppInfo(){
+    var [tiles, trafficComponents] = simulatorMap.toJSON();
     return JSON.stringify({
         'numHeight':simulatorMap.numH, 
         'numWidth':simulatorMap.numW,
-        'tiles': simulatorMap.toJSON(),
-        'trafficComponents' : null, 
+        'tiles':tiles ,
+        'trafficComponents' : trafficComponents, 
         'cars' : _carListToJSON()
     });
 }

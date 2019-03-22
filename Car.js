@@ -52,8 +52,9 @@ function Car(x, y, xIndex, yIndex,  degree){
 		// 'acel' : distBetween2Tile / this.initalSpeed * 3600 / (TIME_UNIT/1000) // tick
 		'regular' : 60,
 		'moving-in-intersection' : 60,
-		'acel' : 200
+		'acel' : 100
 	};
+	this.track = 0.0;
 }
 Car.prototype = Object.create(PIXI.Sprite.prototype);
 
@@ -83,6 +84,7 @@ Car.prototype.updateCarTilePosition = function(){
 }
 
 Car.prototype.moveDistance = function(distance){
+	// console.log("distance", distance)
 	//scale up to our actual software pixel
 	if(this.direction == '>'){
 		this.setXY(this.position.x+distance, this.position.y); 
@@ -102,38 +104,43 @@ Car.prototype.adjustCarVisualization = function(totalDist){
 
 
 Car.prototype.move = function(){
+	console.log('curent state', this.state);
 	if(getCarNextState(this) == 'STOP'){//high priority
 		this.state = 'STOP';
 	}
 	if(this.state == 'idle'){
 		if(this.tick / this.gapTime[this.state] >= 1.0){
 			this.state = getCarNextState(this);
+			this.tick = 0;// reset timer
 		}
 
 	}else if(this.state == 'acel'){
-		var distanceTraveled = 1 / this.gapTime[this.state];
-		this.moveDistance(distanceTraveled*tileSize );
+		var distanceTraveled = tileSize / this.gapTime[this.state];
+		console.log("acel", distanceTraveled);
+		this.track += distanceTraveled;
+		this.moveDistance(distanceTraveled);
 		if((this.tick / this.gapTime[this.state]) >= 1.0){
+			console.log("moved", this.track);
+			this.track=0.0;
 			this.updateCarTilePosition();
 			if(this.direction == '>' || this.direction == '<')
-				//-25 for offset. anchor attop mid
-				this.adjustCarVisualization(Math.abs(Math.max(this.xIndex*tileSize, this.position.x-25)) - Math.min(this.xIndex*tileSize, this.position.x-25));
+				this.adjustCarVisualization(Math.abs(Math.max(this.xIndex*tileSize+25, this.position.x)) - Math.min(this.xIndex*tileSize+25, this.position.x));
 			else if(this.direction == '^' || this.direction == 'v')
-				this.adjustCarVisualization(Math.abs(Math.max(this.yIndex*tileSize, this.position.y-25)) - Math.min(this.yIndex*tileSize, this.position.y-25));
+				this.adjustCarVisualization(Math.abs(Math.max(this.yIndex*tileSize+25, this.position.y)) - Math.min(this.yIndex*tileSize+25, this.position.y));
 			
 			this.state = getCarNextState(this);
 			this.tick = 0;//restart timer
 		}
 
 	}else if(this.state == 'regular' || this.state == 'moving-in-intersection'){
-		var distanceTraveled = 1 / this.gapTime[this.state];
-		this.moveDistance(distanceTraveled*tileSize);
+		var distanceTraveled = tileSize / this.gapTime[this.state];
+		this.moveDistance(distanceTraveled);
 		if((this.tick / this.gapTime[this.state]) >= 1.0){
 			this.updateCarTilePosition()
 			if(this.direction == '>' || this.direction == '<')
-				this.adjustCarVisualization(Math.abs(Math.max(this.xIndex*tileSize, this.position.x-25)) - Math.min(this.xIndex*tileSize, this.position.x-25));
+				this.adjustCarVisualization(Math.abs(Math.max(this.xIndex*tileSize+25, this.position.x)) - Math.min(this.xIndex*tileSize+25, this.position.x));
 			else if(this.direction == '^' || this.direction == 'v')
-				this.adjustCarVisualization(Math.abs(Math.max(this.yIndex*tileSize, this.position.y-25)) - Math.min(this.yIndex*tileSize, this.position.y-25));
+				this.adjustCarVisualization(Math.abs(Math.max(this.yIndex*tileSize+25, this.position.y)) - Math.min(this.yIndex*tileSize+25, this.position.y));
 			
 			this.state = getCarNextState(this);
 			this.tick = 0;//restart tick timer

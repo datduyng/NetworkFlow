@@ -61,11 +61,15 @@ class SimulationApp{
 	}	
 
 	getAppInfo(softwaretype){
+		var result = this.simulationMap.toJSON(softwaretype);
+		var tiles = result[0];
+		var trafficComponents = result[1];
 	    return JSON.stringify({
 	        'numHeight': this.simulationMap.numH, 
 	        'numWidth': this.simulationMap.numW,
-	        'tiles': this.simulationMap.toJSON(softwaretype), 
-	        'cars' : this._carListToJSON()
+	        'tiles': tiles, 
+	        'cars' : this._carListToJSON(),
+	        'trafficComponents' : trafficComponents
 	    });
 	}
 	updateSimulation(){
@@ -187,7 +191,6 @@ function getCarNextState(car){
 	}else if(nextTile[car.direction].generalType == 'end-road'){
 		newState = 'STOP';
 	}
-	console.log("new state", newState);
 	return newState;
 }
 

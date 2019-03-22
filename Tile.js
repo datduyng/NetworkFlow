@@ -28,6 +28,7 @@ Tile.prototype.setXY = function(x, y){
 
 Tile.prototype.setInteractive = function(){
     this.tileClass.interactive = true;
+    this.click = 0; //avoid double click problem
     this.tileClass.on('mouseover', (event) => {
         this.tileClass.tint = 0xB27D7D;
         if(down){// if hover and mouse down
@@ -40,10 +41,16 @@ Tile.prototype.setInteractive = function(){
         renderer.render(stage);
     }).on('mousedown', (event) => {
         down = true;
+        this.click += 1; 
         hold = true;
+        console.log("mousedown");
         this.createTileClassType(currentTileType);
-        if(currentTileType == 'car') this.createObjectOnTop(currentTileType);
-        // renderer.render(stage);
+        if(currentTileType == 'car' && this.click % 2 == 0){
+            this.createObjectOnTop(currentTileType);
+            renderer.render(stage);
+            this.click = 0;
+        } 
+        
     }).on('mouseup', (event) => {
         down = false;
         hold = false;
@@ -92,20 +99,15 @@ Tile.prototype.createTileClassType = function(classType){
         this.setInteractive();
         stage.addChild(this.tileClass);
     }else if(classType == "traffic-light"){
-        console.log("making traffic-light for real");
         componentIdAssigner += 1;
         var newTile = new TrafficLight(componentIdAssigner, classType);
-        console.log("success fully made" , newTile);
         //after remove then transfre info
-        console.log("before remove", this.tileClass);
         if (this.tileClass != null) {
-            console.log("removing old");
             this.getOldTileInfo(newTile);
             stage.removeChild(this.tileClass);
             this.tileClass = null;
         }
         this.tileClass = newTile;
-        console.log("confirm after assign", this.tileClass);
         this.setInteractive();
         stage.addChild(this.tileClass);
     }else if(classType == "stop-sign"){
