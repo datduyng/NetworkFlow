@@ -135,7 +135,7 @@ SimulatorMap.prototype.getTileObjects = function(x, y){
 
 }
 
-//base on: http://actionsnippet.com/?p=1227
+////base on: http://actionsnippet.com/?p=1227
 SimulatorMap.prototype.toJSON = function(){
 
     var result = new Array(2); 
