@@ -122,6 +122,8 @@ SimulatorMap.prototype.getTileObjects = function(x, y){
             "generalType" : this.simMap[y][x].tileClass.generalType,
             "classType" : this.simMap[y][x].tileClass.classType,
             "builtDirections" : this.getBuiltDirections(x, y),
+            "xIndex" : x,
+            "yIndex" : y
         };
     }
 
