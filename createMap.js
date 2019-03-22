@@ -2,8 +2,6 @@ document.getElementById("uploadcsv").addEventListener("change", loadCSV, true);
 document.getElementById("uploadjson").addEventListener("change", loadJSON, true);
 //pixijs ex:http://scottmcdonnell.github.io/pixi-examples/index.html?s=demos&f=texture-swap.js&title=Texture%20Swap
 
-
-
 var stage = new PIXI.Stage(0x66FF99);
 var renderer = new PIXI.autoDetectRenderer(
     WIDTH,
@@ -166,8 +164,7 @@ function loadJSON(e){
         var jsonData = JSON.parse(event.target.result);
         setupMapFromJSON(jsonData);
         renderer.render(stage);
-    }// end on load. 
+    }// end on load
 }
-
 
 
