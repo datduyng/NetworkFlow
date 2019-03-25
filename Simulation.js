@@ -148,6 +148,16 @@ function animate() {
     	requestAnimationFrame(animate);
 }
 
+function getRandomChar(builtDirections){
+	var randInt = Math.floor(Math.random() * builtDirections.length);
+	if(builtDirections.length == 0){
+		console.log("builtDirections len of 0");
+		alert('builtDirections len of 0');
+	}
+
+	return builtDirections[randInt]; 
+
+}
 
 function getCarNextState(car){
 	var newState = null;
@@ -170,7 +180,10 @@ function getCarNextState(car){
 		'STOP' : 'idle', 
 		'acel' : 'regular', 
 		'regular' : 'regular',
-		'moving-in-intersection' : 'regular'
+		'stop-intersection' : 'idle-intersection',
+		'idle-intersection' : 'moving-in-intersection',
+		'moving-in-intersection' : 'regular',
+		'turn' : 'regular'
 	}; 
 	var prevState = car.state;
 	if(nextTile[car.direction].generalType == 'road'){
@@ -182,13 +195,19 @@ function getCarNextState(car){
 			newState = nextTile[car.direction].carEnter(car);
 		
 
-		if(newState == 'not-movable'){
-			newState = 'STOP'; 
+		if(newState == 'not-movable' && car.state != 'moving-in-intersection'){
+			newState = 'stop-intersection'; 
 		}else if(newState == 'movable'){
 			// decide new Direction.
-			newState = transition[prevState];
+			//sampling random directions. 
+			var randomDirection = getRandomChar(nextTile[car.direction].builtDirections);
+			car.turningDirection = randomDirection;
+			if(car.direction != car.turningDirection){
+				newState = 'turn';
+			}else newState = transition[prevState];
 		}
 	}else if(nextTile[car.direction].generalType == 'end-road'){
+		console.log("end road sotp");
 		newState = 'STOP';
 	}
 	return newState;
