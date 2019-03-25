@@ -46,6 +46,7 @@ Tile.prototype.setInteractive = function(){
         console.log("mousedown");
         this.createTileClassType(currentTileType);
         if(currentTileType == 'car' && this.click % 2 == 0){
+            console.log("creating car");
             this.createObjectOnTop(currentTileType);
             renderer.render(stage);
             this.click = 0;

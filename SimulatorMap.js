@@ -92,22 +92,22 @@ SimulatorMap.prototype.getBuiltDirections = function(x, y){
     var possibleDirections = ""; 
 
     if(y < this.numH-2){
-        if(this.simMap[y+1][x].tileClass.classType == "road-horizontal" || this.simMap[y+1][x].tileClass.classType == "road-verticle"){
+        if(this.simMap[y+1][x].tileClass.classType == "road-verticle"){
             possibleDirections += "v";
         }
     }
     
     if(y > 0)  
-        if(this.simMap[y-1][x].tileClass.classType == "road-horizontal" || this.simMap[y-1][x].tileClass.classType == 'road-verticle')
+        if(this.simMap[y-1][x].tileClass.classType == "road-verticle")
             possibleDirections += "^";
     
     if(x < this.numW-2)
-        if(this.simMap[y][x+1].tileClass.classType == "road-horizontal" || this.simMap[y][x+1].tileClass.classType == 'road-verticle')
+        if(this.simMap[y][x+1].tileClass.classType == "road-horizontal")
             possibleDirections += ">";
         
 
     if(x > 0)
-        if(this.simMap[y][x-1].tileClass.classType =="road-horizontal" || this.simMap[y][x-1].tileClass.classType == 'road-verticle')
+        if(this.simMap[y][x-1].tileClass.classType =="road-horizontal")
             possibleDirections += "<";
     return possibleDirections;
 }

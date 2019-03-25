@@ -7,18 +7,18 @@ function Car(x, y, xIndex, yIndex,  degree){
 	this.yIndex = yIndex; 
 	this.id; //TODO: config id attr 
 
-	var dirMap = {
+	this.deg2dir = {
 		0:'>',
 		90:'v',
 		180:'<',
-		270:'^'
+		270:'^',
 	};
 
-	var dir2degree = {
+	this.dir2degree = {
 		'>' : 0,
 		'v' : 90,
 		'<' : 180,
-		'^' : 270
+		'^' : 270,
 	};
 
 	this.transition = {
@@ -29,14 +29,7 @@ function Car(x, y, xIndex, yIndex,  degree){
 		'moving-in-intersection' : 'regular'
 	};
 
-	if(typeof degree == 'number'){
-		this.direction = dirMap[degree];
-		this.rotation = degree * Math.PI / 180;
-	}
-	else{
-		this.direction = degree;
-		this.rotation = dir2degree[degree] * Math.PI / 180;
-	}
+	this.setRotation(degree); 
 	this.anchor.set(0.5, 0); //set pivot point. at top middle. 
 	
 
@@ -52,9 +45,15 @@ function Car(x, y, xIndex, yIndex,  degree){
 		// 'acel' : distBetween2Tile / this.initalSpeed * 3600 / (TIME_UNIT/1000) // tick
 		'regular' : 60,
 		'moving-in-intersection' : 60,
-		'acel' : 100
+		'acel' : 100,
+		'idle-intersection' : 10,
+		'turn' :  20
 	};
 	this.track = 0.0;
+
+	this.turningDirection = null;// use to set new target direction
+	this.turningPhase = 1;
+	this.globalTraveled = 0.0;
 }
 Car.prototype = Object.create(PIXI.Sprite.prototype);
 
@@ -67,6 +66,17 @@ Car.prototype.setXY = function(x, y){
 Car.prototype.setXYIndex = function(xIndex, yIndex){
 	this.xIndex = xIndex; 
 	this.yIndex = yIndex;
+}
+
+Car.prototype.setRotation = function(degree){
+	if(typeof degree == 'number'){
+		this.direction = this.deg2dir[degree];
+		this.rotation = degree * Math.PI / 180;
+	}
+	else{
+		this.direction = degree;
+		this.rotation = this.dir2degree[degree] * Math.PI / 180;
+	}
 }
 
 
@@ -104,11 +114,11 @@ Car.prototype.adjustCarVisualization = function(totalDist){
 
 
 Car.prototype.move = function(){
-	console.log('curent state', this.state);
+	// console.log('curent state', this.state);
 	if(getCarNextState(this) == 'STOP'){//high priority
 		this.state = 'STOP';
 	}
-	if(this.state == 'idle'){
+	if(this.state == 'idle' || this.state == 'idle-intersection'){
 		if(this.tick / this.gapTime[this.state] >= 1.0){
 			this.state = getCarNextState(this);
 			this.tick = 0;// reset timer
@@ -146,11 +156,126 @@ Car.prototype.move = function(){
 			this.tick = 0;//restart tick timer
 		}
 	}else if(this.state == 'turn'){
-		
-	}else if(this.state == 'STOP'){
+		console.log("turning--"); 
+		if(this.tick % this.gapTime[this.state] == 0){
+			var turn = this.decideTurnLeftOrRight()
+			this.turnTeleport(turn);
+			this.tick = 0; 
+			this.state = getCarNextState(this);
+			this.direction = this.turningDirection;
+		}
+	}else if(this.state == 'STOP' || this.state == 'stop-intersection'){
 		this.state = getCarNextState(this);
 	}
 	this.tick+=1;
+}
+
+
+Car.prototype.decideTurnLeftOrRight = function(){
+	//decide to turn left or right
+	var newDeg = this.dir2degree[this.turningDirection];
+	var oldDeg = this.dir2degree[this.direction];
+	console.log("new deg", newDeg);
+	console.log("old deg", oldDeg);
+	var turn = 'straight'; //'uturn', 'right', 'left', or 'straight' 
+	this.opposite = {
+		'right' : 'left',
+		'left' : 'right',
+		'straight' : 'uturn',
+		'uturn' : 'straight'
+	};
+
+	if(newDeg - oldDeg > 0) turn='right';
+	else if(newDeg - oldDeg < 0) turn='left';
+	else turn='straight';
+
+						 console.log("turn?", turn);
+	if(Math.abs(newDeg-oldDeg) == 270){
+		turn = this.opposite[turn];
+	}else if(Math.abs(newDeg - oldDeg) == 180){
+		turn = 'uturn';
+	}
+
+	return turn;
+}
+
+
+Car.prototype.turnRight = function(){
+	if(this.direction == '^'){
+		this.xIndex += 1; 
+		this.yIndex -= 1;
+	}else if(this.direction == 'v'){
+		this.xIndex -= 1;
+		this.yIndex += 1; 
+	}else if(this.direction == '>'){
+		this.xIndex += 1;
+		this.yIndex += 1; 
+	}else if(this.direction == '<'){
+		this.xIndex -= 1; 
+		this.yIndex -= 1;
+	}
+}
+
+Car.prototype.turnLeft = function(){
+	if(this.direction == '^'){
+		this.xIndex -= 1; 
+		this.yIndex -= 1;
+	}else if(this.direction == 'v'){
+		this.xIndex += 1;
+		this.yIndex += 1; 
+	}else if(this.direction == '>'){
+		this.xIndex += 1;
+		this.yIndex -= 1; 
+	}else if(this.direction == '<'){
+		this.xIndex -= 1; 
+		this.yIndex += 1;
+	}
+}
+
+Car.prototype.moveStraight = function(){
+	if(this.direction == '^'){
+		// this.xIndex -= 1; 
+		this.yIndex -= 2;
+	}else if(this.direction == 'v'){
+		// this.xIndex += 1;
+		this.yIndex += 2; 
+	}else if(this.direction == '>'){
+		this.xIndex += 2;
+		// this.yIndex -= 1; 
+	}else if(this.direction == '<'){
+		this.xIndex -= 2; 
+		// this.yIndex += 1;
+	}
+}
+
+Car.prototype.turnTeleport= function(turn){
+	console.log("turn dir" , turn)
+	if(turn == 'left'){
+		this.turnLeft();
+	}else if(turn == 'right'){
+		this.turnRight();
+	}else if(turn == 'uturn'){
+		//nothing. new direction is enough info already
+	}else if(turn == 'straight'){
+		this.moveStraight();
+	}
+	this.drawAt(this.xIndex, this.yIndex); 
+}
+
+/**
+ * draw at index base on direction
+ */
+Car.prototype.drawAt = function(xIndex, yIndex){
+	var x = tileSize *xIndex + tileSize/2;
+	var y = tileSize *yIndex + tileSize/2;
+	this.setXY(x, y);
+	this.setRotation(this.turningDirection);
+
+}
+
+Car.prototype.uturn= function(){
+	console.log("TO BE DEVELOP - UTURN method");
+	alert("TO BE DEV _ UTURN method")
 }
 
 
