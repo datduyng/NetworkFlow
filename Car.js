@@ -26,7 +26,10 @@ function Car(x, y, xIndex, yIndex,  degree){
 		'STOP' : 'idle', 
 		'acel' : 'regular', 
 		'regular' : 'regular',
-		'moving-in-intersection' : 'regular'
+		'stop-intersection' : 'idle-intersection',
+		'idle-intersection' : 'moving-in-intersection',
+		'moving-in-intersection' : 'regular',
+		'turn' : 'regular'
 	};
 
 	this.setRotation(degree); 
@@ -113,24 +116,73 @@ Car.prototype.adjustCarVisualization = function(totalDist){
 }
 
 
-Car.prototype.move = function(){
+Car.prototype.getCarNextState = function(simulationMap){
+	var newState = null;
+	var nextTile = {
+		'>' : (this.xIndex < simulationMap.numW-2)? 
+				simulationMap.simMap[this.yIndex][this.xIndex+1].tileClass:
+				'end-road', 
+		'<' : (this.xIndex > 1)?
+				simulationMap.simMap[this.yIndex][this.xIndex-1].tileClass:
+				'end-road',
+		'v' : (this.yIndex < simulationMap.numH-2)?
+				simulationMap.simMap[this.yIndex+1][this.xIndex].tileClass:
+				'end-road',
+		'^' : (this.yIndex > 1)?
+				simulationMap.simMap[this.yIndex-1][this.xIndex].tileClass:
+				'end-road'
+	};
+	this.prevState = this.state;
+	if(nextTile[this.direction].generalType == 'road'){
+
+		newState = this.transition[this.prevState];
+	}else if(nextTile[this.direction].generalType == 'traffic-light'){
+		if(this.prevState != 'moving-in-intersection')
+			newState = nextTile[this.direction].carEnter(this);
+		
+		if(newState == 'not-movable' && this.state != 'moving-in-intersection'){
+			newState = 'stop-intersection'; 
+		}else if(newState == 'movable'){
+			// decide new Direction.
+			//sampling random directions. 
+			var randomDirection = getRandomChar(nextTile[this.direction].builtDirections);
+			this.turningDirection = randomDirection;
+			if(this.direction != this.turningDirection){
+				newState = 'turn';
+			}else {
+				newState = this.transition[this.prevState];
+			}
+		}
+	}else if(nextTile[this.direction].generalType == 'stop-sign'){
+		newState = nextTile[this.direction].carEnter(this);
+	}else if(nextTile[this.direction].generalType == 'end-road'){
+		console.log("end road stop");
+		newState = 'STOP';
+	}
+
+	console.log("Car", this.id, newState, 'prev', this.prevState);
+	return newState;
+}
+
+
+
+Car.prototype.move = function(simulationMap){
 	// console.log('curent state', this.state);
-	if(getCarNextState(this) == 'STOP'){//high priority
+	var nextState = this.getCarNextState(simulationMap);
+	if(nextState == 'STOP'){//high priority
 		this.state = 'STOP';
 	}
 	if(this.state == 'idle' || this.state == 'idle-intersection'){
 		if(this.tick / this.gapTime[this.state] >= 1.0){
-			this.state = getCarNextState(this);
+			this.state = this.getCarNextState(simulationMap);;
 			this.tick = 0;// reset timer
 		}
 
 	}else if(this.state == 'acel'){
 		var distanceTraveled = tileSize / this.gapTime[this.state];
-		console.log("acel", distanceTraveled);
 		this.track += distanceTraveled;
 		this.moveDistance(distanceTraveled);
 		if((this.tick / this.gapTime[this.state]) >= 1.0){
-			console.log("moved", this.track);
 			this.track=0.0;
 			this.updateCarTilePosition();
 			if(this.direction == '>' || this.direction == '<')
@@ -138,7 +190,7 @@ Car.prototype.move = function(){
 			else if(this.direction == '^' || this.direction == 'v')
 				this.adjustCarVisualization(Math.abs(Math.max(this.yIndex*tileSize+25, this.position.y)) - Math.min(this.yIndex*tileSize+25, this.position.y));
 			
-			this.state = getCarNextState(this);
+			this.state = this.getCarNextState(simulationMap);;
 			this.tick = 0;//restart timer
 		}
 
@@ -152,20 +204,19 @@ Car.prototype.move = function(){
 			else if(this.direction == '^' || this.direction == 'v')
 				this.adjustCarVisualization(Math.abs(Math.max(this.yIndex*tileSize+25, this.position.y)) - Math.min(this.yIndex*tileSize+25, this.position.y));
 			
-			this.state = getCarNextState(this);
+			this.state = this.getCarNextState(simulationMap);;
 			this.tick = 0;//restart tick timer
 		}
 	}else if(this.state == 'turn'){
-		console.log("turning--"); 
 		if(this.tick % this.gapTime[this.state] == 0){
 			var turn = this.decideTurnLeftOrRight()
 			this.turnTeleport(turn);
 			this.tick = 0; 
-			this.state = getCarNextState(this);
+			this.state = this.getCarNextState(simulationMap);;
 			this.direction = this.turningDirection;
 		}
 	}else if(this.state == 'STOP' || this.state == 'stop-intersection'){
-		this.state = getCarNextState(this);
+		this.state = this.getCarNextState(simulationMap);;
 	}
 	this.tick+=1;
 }

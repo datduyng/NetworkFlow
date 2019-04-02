@@ -16,9 +16,15 @@ function TrafficLight(id, classType){
 		'traffic-light-we' : 'traffic-light-ns',
 	};
 	this.builtDirections = "";
+	this.isCarPassing = false;
 	//switching
 }
 TrafficLight.prototype = Object.create(PIXI.Sprite.prototype);
+
+
+TrafficLight.prototype.setIsCarpassing = function(isCarPassing){
+	this.isCarPassing = isCarPassing;
+}
 
 TrafficLight.prototype.update = function(){
 	this.tick+=1; 

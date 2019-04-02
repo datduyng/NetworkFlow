@@ -48,3 +48,16 @@ var tileSize = 50;
 
 var carIdAssigner = 0; 
 var componentIdAssigner = 0;
+
+
+
+function setCarIdAssigner(step){
+    carIdAssigner += step;
+}
+
+function getNewCarIdAssigner(){
+    var step = 2;
+    setCarIdAssigner(carIdAssigner+step);
+    return carIdAssigner;
+}
+

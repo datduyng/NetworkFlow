@@ -27,7 +27,7 @@ class SimulationApp{
 	            this.simulationMap.simMap[y][x] = new Tile(tiles[y][x].classType, tileSize);
 
 	            //set built direction for intersection
-	            if(tiles[y][x].classType == 'STOP-sign' || 
+	            if(tiles[y][x].classType == 'stop-sign' || 
 	               tiles[y][x].classType == 'traffic-light'){
 	            	this.simulationMap.simMap[y][x].tileClass.builtDirections = tiles[y][x]['builtDirections'];
 	            	//assume that componentIdAssigner only got iterate in new Tile
@@ -45,6 +45,7 @@ class SimulationApp{
 	        var c = carListObjs[i]; 
 	        var car = new Car(c['pixi.position.x'], c['pixi.position.y'],
 	                          c['xIndex'], c['yIndex'], c['direction']);
+	        car.id = getNewCarIdAssigner();
 	        this.stage.addChild(car); 
 	        this.carList.push(car);
 	    }
@@ -75,7 +76,7 @@ class SimulationApp{
 	updateSimulation(){
 		for(var i=0;i<this.carList.length;i++){
 			var car = this.carList[i]; 
-			car.move();
+			car.move(simulationApp.simulationMap);
 		}
 
 		//TODO: update component list as well
@@ -159,59 +160,7 @@ function getRandomChar(builtDirections){
 
 }
 
-function getCarNextState(car){
-	var newState = null;
-	var nextTile = {
-		'>' : (car.xIndex < simulationApp.simulationMap.numW-2)? 
-				simulationApp.simulationMap.simMap[car.yIndex][car.xIndex+1].tileClass:
-				'end-road', 
-		'<' : (car.xIndex > 1)?
-				simulationApp.simulationMap.simMap[car.yIndex][car.xIndex-1].tileClass:
-				'end-road',
-		'v' : (car.yIndex < simulationApp.simulationMap.numH-2)?
-				simulationApp.simulationMap.simMap[car.yIndex+1][car.xIndex].tileClass:
-				'end-road',
-		'^' : (car.yIndex > 1)?
-				simulationApp.simulationMap.simMap[car.yIndex-1][car.xIndex].tileClass:
-				'end-road'
-	};
-	var transition = {
-		'idle' : 'acel',
-		'STOP' : 'idle', 
-		'acel' : 'regular', 
-		'regular' : 'regular',
-		'stop-intersection' : 'idle-intersection',
-		'idle-intersection' : 'moving-in-intersection',
-		'moving-in-intersection' : 'regular',
-		'turn' : 'regular'
-	}; 
-	var prevState = car.state;
-	if(nextTile[car.direction].generalType == 'road'){
 
-		newState = transition[prevState];
-	}else if(nextTile[car.direction].generalType == 'traffic-light' || 
-			 nextTile[car.direction].generalType == 'STOP-sign'){
-		if(prevState != 'moving-in-intersection')
-			newState = nextTile[car.direction].carEnter(car);
-		
-
-		if(newState == 'not-movable' && car.state != 'moving-in-intersection'){
-			newState = 'stop-intersection'; 
-		}else if(newState == 'movable'){
-			// decide new Direction.
-			//sampling random directions. 
-			var randomDirection = getRandomChar(nextTile[car.direction].builtDirections);
-			car.turningDirection = randomDirection;
-			if(car.direction != car.turningDirection){
-				newState = 'turn';
-			}else newState = transition[prevState];
-		}
-	}else if(nextTile[car.direction].generalType == 'end-road'){
-		console.log("end road sotp");
-		newState = 'STOP';
-	}
-	return newState;
-}
 
 // Event Handler
 document.getElementById("uploadjson").addEventListener("change",loadJSON, true);
@@ -239,7 +188,7 @@ function exportJSON(fileName, json, softwaretype){
     var link; 
     link = document.createElement('a');
     link.setAttribute('href', data); 
-    link.setAttribute('download', fileName); 
+    link.setAttribute('download',	 fileName); 
     link.click(); 
 }
 
