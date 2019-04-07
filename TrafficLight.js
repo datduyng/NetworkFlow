@@ -34,7 +34,6 @@ TrafficLight.prototype.update = function(){
 	}
 }
 TrafficLight.prototype.switchState = function(){
-	console.log("Switched state", this.lightState);
 	//switch the variable state, and the texture as well
 	this.lightState = this.transition[this.lightState];//transition
 	this.texture = PIXI.Texture.fromImage(spritePath[this.lightState]);
@@ -50,3 +49,31 @@ TrafficLight.prototype.carEnter = function(car){
 	}
 }
 
+
+
+TrafficLight.prototype.carOut = function(car){
+	//pass
+}
+
+TrafficLight.prototype.toString = function(){
+	return {
+		'id' : this.id,
+		'builtDirections': this.builtDirections,
+		'lightState' : this.lightState
+	}
+}
+
+TrafficLight.prototype.setInteractive = function(){
+    this.interactive = true;
+    this.click = 0; //avoid double click problem
+    this.on('mouseover', (event) => {
+        this.tint = 0xB27D7D;
+        renderer.render(stage);
+    }).on('mouseout', (event) => {
+        this.tint = 0xFFFFFF;
+        renderer.render(stage);
+    }).on('mousedown', (event) => {
+			console.log(this.toString());
+    }).on('mouseup', (event) => {
+    });
+}

@@ -3,7 +3,7 @@ function Tile(classType, tileSize){
     // texture for tiel
     //inheritance with Sprite class
 
-    this.createTileClassType(classType);
+    this.createTileClassType(classType, false);
     this.tileSize = tileSize;
 
     this.tileClass.position.x = 0;// set initial position
@@ -33,7 +33,7 @@ Tile.prototype.setInteractive = function(){
         this.tileClass.tint = 0xB27D7D;
         if(down){// if hover and mouse down
             //build here
-            this.createTileClassType(currentTileType)
+            if(currentTileType == 'car' || currentTileType == 'boat') this.createTileClassType(currentTileType, true)
         }
         renderer.render(stage);
     }).on('mouseout', (event) => {
@@ -43,14 +43,14 @@ Tile.prototype.setInteractive = function(){
         down = true;
         this.click += 1; 
         hold = true;
-        console.log("mousedown");
-        this.createTileClassType(currentTileType);
-        if(currentTileType == 'car' && this.click % 2 == 0){
-            console.log("creating car");
+        //ensure user to put 1 vehicle down. Cannot fix this double clicking pixi bug
+        if((currentTileType == 'car' || currentTileType == 'boat') && this.click % 2 == 0){
             this.createObjectOnTop(currentTileType);
             renderer.render(stage);
             this.click = 0;
-        } 
+        }else{
+            this.createTileClassType(currentTileType, true);
+        }
         
     }).on('mouseup', (event) => {
         down = false;
@@ -85,9 +85,10 @@ Tile.prototype.getOldTileInfo = function(tile){
     tile.position.y = this.tileClass.position.y; 
 }
 
-Tile.prototype.createTileClassType = function(classType){
+Tile.prototype.createTileClassType = function(classType, interactive){
     if(classType == "grass" || classType == "ground" || classType=="construction-man"||
-       classType == "construction-barrier"){
+       classType == "construction-barrier" ||
+       classType == 'water'){
         var newTile = new Ground(classType);
         
 
@@ -97,8 +98,10 @@ Tile.prototype.createTileClassType = function(classType){
             stage.removeChild(this.tileClass);
         }
         this.tileClass = newTile;
-        this.setInteractive();
+        if(interactive) this.setInteractive();
         stage.addChild(this.tileClass);
+
+
     }else if(classType == "traffic-light"){
         componentIdAssigner += 1;
         var newTile = new TrafficLight(componentIdAssigner, classType);
@@ -109,8 +112,9 @@ Tile.prototype.createTileClassType = function(classType){
             this.tileClass = null;
         }
         this.tileClass = newTile;
-        this.setInteractive();
+        if(interactive)this.setInteractive();
         stage.addChild(this.tileClass);
+
     }else if(classType == "stop-sign"){
         componentIdAssigner += 1;
         var newTile = new StopSign(componentIdAssigner, classType);
@@ -121,7 +125,7 @@ Tile.prototype.createTileClassType = function(classType){
             this.tileClass = null;
         }
         this.tileClass = newTile;
-        this.setInteractive();
+        if(interactive)this.setInteractive();
         stage.addChild(this.tileClass);
     }else if(classType == "road-horizontal" || 
              classType == "road-verticle"){
@@ -134,9 +138,10 @@ Tile.prototype.createTileClassType = function(classType){
         }
         this.tileClass = newTile;
         stage.addChild(this.tileClass);
-        this.setInteractive();
+        if(interactive)this.setInteractive();
     }else{
         console.log("Invalid classType", classType);
+
     }
     
 }
@@ -147,10 +152,20 @@ Tile.prototype.createObjectOnTop = function(classType){
         var x = this.tileClass.position.x + tileSize/2;
         var y = this.tileClass.position.y + tileSize/2;
 
-        var car = new Car(x, y, this.xIndex, this.yIndex, degree);
+        var car = new Car(x, y, this.xIndex, this.yIndex, carDegree);
         stage.addChild(car);
         renderer.render(stage);
 
         carList.push(car);
+    }else if(classType == "boat"){
+        carIdAssigner += 1; 
+        var x = this.tileClass.position.x + tileSize/2;
+        var y = this.tileClass.position.y + tileSize/2;
+
+        var boat = new Boat(x, y, this.xIndex, this.yIndex, boatDegree);
+        stage.addChild(boat);
+        renderer.render(stage);
+
+        boatList.push(boat);
     }
 }

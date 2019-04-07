@@ -106,15 +106,18 @@
 <!-- end side nav bar -->
 
     <div class="col-md-12">
-        <div align="right">
-          <canvas id="game-canvas" width="800" height="600"></canvas>    
-        </div>
-
-        <script type="text/javascript" src="./global.js"></script>
 
     <!--   <fieldset>
       <legend>Button group</legend> -->
         <div class="app-control" align="center">
+            <!------------------ Application Canvas ---------------------->
+            <div align="center">
+              <canvas id="game-canvas" width="800" height="600"></canvas>    
+            </div>
+
+            <script type="text/javascript" src="./global.js"></script>
+
+
             <div class="centered center-btn app-control" style="display: inline-block; text-align: left;text-align: center;">
 
                 <a id="startStopSimulationBtn" class="waves-effect waves-light btn" onclick="
@@ -149,6 +152,7 @@
                     <br>---------------------------------------<br />
             </div>
         </div>
+        <script type="text/javascript" src="./Boat.js"></script>
         <script type="text/javascript" src="./Car.js"></script>
         <script type="text/javascript" src="./Ground.js"></script>
         <script type="text/javascript" src="./StopSign.js"></script>

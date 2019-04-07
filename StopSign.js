@@ -10,7 +10,9 @@ class Queue
     { 
         this.items = []; 
     } 
-	enqueue(element) { this.items.push(element); } 
+	enqueue(element) { 
+		if(this.items.indexOf(element) < 0)// if not in list
+			this.items.push(element); } 
 	dequeue() { 
 	    if(this.isEmpty()) 
 	        return "Underflow"; 
@@ -29,6 +31,14 @@ class Queue
 	        str += this.items[i] +" "; 
 	    return str; 
 	} 
+
+	toString(){
+		return JSON.Stringify(this.items());
+	}
+
+	toJSON(){
+		return this.items();
+	}
 } 
 
 
@@ -60,26 +70,42 @@ StopSign.prototype.setCarPassing = function(carPassing){
  * When carEnter is being call again, if car state is 'stop-intersection'
  * then we will not add the car to queue. 
  */
-StopSign.prototype.carEnter = function(car){
-
-	if(car.state == 'stop-intersection'){
-		this.queue.enqueue(car);
-		return 'not-movable';//stop when first enter.
-	}
-
-
-
+StopSign.prototype.carEnter = function(car){	
 	var carReady = this.queue.front();
 
-	console.log('carReady', carReady.id)
-	console.log('car', car.id);
-
-	if(carReady.id == car.id){
-		console.log("car passing", car.id);
-		this.setCarPassing(carReady);
+	if(car.id == carReady.id){
 		return 'movable';
 	}else{
-		// this.setIsCarPassing(false);
 		return 'not-movable';
 	}
+}
+
+
+StopSign.prototype.carOut = function(car){
+	var current = this.queue.front();
+	if(car.id == current.id)
+		this.queue.dequeue();
+}
+
+StopSign.prototype.toString = function(){
+	return {
+		'queue' : (this.queue.items.toString()),
+		'id' : this.id,
+		'builtDirections': this.builtDirections
+	}
+}
+
+StopSign.prototype.setInteractive = function(){
+    this.interactive = true;
+    this.click = 0; //avoid double click problem
+    this.on('mouseover', (event) => {
+        this.tint = 0xB27D7D;
+        renderer.render(stage);
+    }).on('mouseout', (event) => {
+        this.tint = 0xFFFFFF;
+        renderer.render(stage);
+    }).on('mousedown', (event) => {
+			console.log(this.toString());
+    }).on('mouseup', (event) => {
+    });
 }

@@ -1,7 +1,7 @@
 
 function SimulatorMap(stage, renderer, numW, numH, tileSize){
-	this.width; 
-	this.height; 
+	this.width = tileSize*numW; 
+	this.height = tileSize*numH; 
 	this.tileSize = tileSize;
 	this.numW = numW;
 	this.numH = numH;
@@ -9,9 +9,6 @@ function SimulatorMap(stage, renderer, numW, numH, tileSize){
     this.renderer = renderer;
     this._initMap();
 }
-
-this.width = WIDTH; 
-this.height = HEIGHT;
 
 SimulatorMap.prototype._clearMap = function(){
     for(var x =0;x<this.numW;x++)
@@ -57,13 +54,13 @@ SimulatorMap.prototype._initMap = function() {
 
 };
 
-SimulatorMap.prototype.setupMap = function(){
+SimulatorMap.prototype.setupMap = function(interactive){
     for(var x =0;x<this.numW;x++){
         for(var y=0;y<this.numH;y++){
             this.simMap[y][x] = new Tile('grass',this.tileSize);
             this.simMap[y][x].setXY(x*this.tileSize, y*this.tileSize);
             //setup sprite event here
-            this.simMap[y][x].setInteractive();
+            if(interactive == 'interactive') this.simMap[y][x].setInteractive();
             this.simMap[y][x].setIndexXY(x, y); 
             this.stage.addChild(this.simMap[y][x].tileClass);
 

@@ -16,6 +16,11 @@ body { background: #e6f7ff !important;}
   border-radius: 4px;
   padding: 5px;
 }
+#visualize-boat-orientation {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+}
 
 
 
@@ -34,11 +39,6 @@ body { background: #e6f7ff !important;}
 } 
 .center-btn { text-align: center }
 /*.btn {background-color: #ffab91;}*/
-.visualize-car-orientation {
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 5px;
-}
 
 .rotated {
   transform: rotate(90deg);
