@@ -1,17 +1,21 @@
-document.getElementById("uploadcsv").addEventListener("change", loadCSV, true);
-document.getElementById("uploadjson").addEventListener("change", loadJSON, true);
+
+
 //pixijs ex:http://scottmcdonnell.github.io/pixi-examples/index.html?s=demos&f=texture-swap.js&title=Texture%20Swap
 
 var stage = new PIXI.Stage(0x66FF99);
 var renderer = new PIXI.autoDetectRenderer(
     WIDTH,
     HEIGHT,
-    {view:document.getElementById("game-canvas")}
+    {view:document.getElementById("game-canvas"), 
+     backgroundColor:0x0F0805, 
+     transparent: false,
+     antialias: false }
 );
 
 
 var simulatorMap;
 var carList = [];
+var boatList = [];
 var trafficComponents = {};
 
 let sprites = {}; 
@@ -28,8 +32,35 @@ function setup(){
     //// sprites.grass = new PIXI.Sprite.fromImage("./basic/grass.png");
     //SAVE
     simulatorMap = new SimulatorMap(stage, renderer, WIDTH/tileSize, HEIGHT/tileSize, tileSize);
-    simulatorMap.setupMap();
+    simulatorMap.setupMap('interactive');
     renderer.render(stage);
+
+
+    //handle map size input
+    $("#mapHeightInput").val(simulatorMap.numH);
+    $("#mapWidthInput").val(simulatorMap.numW);
+
+    $("#mapHeightInput").change(function(event){
+        var newDisplayHeight = $("#mapHeightInput").val() * tileSize;
+        var newDisplayWidth = $("#mapWidthInput").val() * tileSize;
+        renderer.resize(newDisplayWidth, newDisplayHeight);
+        WIDTH = newDisplayWidth;
+        HEIGHT = newDisplayHeight;
+        simulatorMap = new SimulatorMap(stage, renderer, $("#mapWidthInput").val(), $("#mapHeightInput").val() , tileSize);
+        simulatorMap.setupMap('interactive');
+        renderer.render(stage);
+    });
+
+    $("#mapWidthInput").change(function(event){
+        var newDisplayHeight = $("#mapHeightInput").val() * tileSize;
+        var newDisplayWidth = $("#mapWidthInput").val() * tileSize;
+        WIDTH = newDisplayWidth;
+        HEIGHT = newDisplayHeight;
+        renderer.resize(newDisplayWidth, newDisplayHeight);
+        simulatorMap = new SimulatorMap(stage, renderer, $("#mapWidthInput").val(), $("#mapHeightInput").val() , tileSize);
+        simulatorMap.setupMap('interactive');
+        renderer.render(stage);
+    });
 }
 
 
@@ -48,10 +79,10 @@ function exportCSV(filename, csv){
 }
 
 
-function _carListToJSON(){
+function objListToJson(objList){
     var result = []; 
-    for(var i=0;i<carList.length;i++){
-        var inStr = carList[i].toString();
+    for(var i=0;i<objList.length;i++){
+        var inStr = objList[i].toString();
         var obj = JSON.parse(inStr);
         result.push(obj);
     }
@@ -65,7 +96,8 @@ function getAppInfo(){
         'numWidth':simulatorMap.numW,
         'tiles':tiles ,
         'trafficComponents' : trafficComponents, 
-        'cars' : _carListToJSON()
+        'cars' : objListToJson(carList),
+        'boats' : objListToJson(boatList)
     });
 }
 
@@ -85,19 +117,44 @@ function exportJSON(fileName, json){
 }
 
 
-var degree = 0;
+var carDegree = 0;
+var boatDegree = 0;
 /**
  * THis rotate the car and arrow help user visualize the dir
  */
-function rotateVisualization(){
-    degree = (degree+90)%360;//ensure to be in range [0,270]
-    $('.visualize-car-orientation').css({
-      'transform': 'rotate(' + degree + 'deg)',
-      '-ms-transform': 'rotate(' + degree + 'deg)',
-      '-moz-transform': 'rotate(' + degree + 'deg)',
-      '-webkit-transform': 'rotate(' + degree + 'deg)',
-      '-o-transform': 'rotate(' + degree + 'deg)'
-    });
+function rotateVisualization(object){
+    var degree = 0;
+    if (object == 'car') {
+        degree = carDegree;
+        carDegree = (carDegree+90)%360;//ensure to be in range [0,270]
+
+        $('.visualize-car-orientation').css({
+          'transform': 'rotate(' + carDegree + 'deg)',
+          '-ms-transform': 'rotate(' + carDegree + 'deg)',
+          '-moz-transform': 'rotate(' + carDegree + 'deg)',
+          '-webkit-transform': 'rotate(' + carDegree + 'deg)',
+          '-o-transform': 'rotate(' + carDegree + 'deg)'
+        });
+    }
+
+    else if(object == 'boat') {
+        degree = boatDegree;
+        boatDegree = (boatDegree+90)%360;//ensure to be in range [0,270]
+
+        $('.visualize-boat-orientation').css({
+          'transform': 'rotate(' + boatDegree + 'deg)',
+          '-ms-transform': 'rotate(' + boatDegree + 'deg)',
+          '-moz-transform': 'rotate(' + boatDegree + 'deg)',
+          '-webkit-transform': 'rotate(' + boatDegree + 'deg)',
+          '-o-transform': 'rotate(' + boatDegree + 'deg)'
+        });
+    }else{
+        alert("Invalid vehicle type", object);
+    }
+
+
+
+
 }
 
 function loadCSV(e){
@@ -127,6 +184,13 @@ function setupMapFromJSON(jsonObj){
 
     simulatorMap = new SimulatorMap(stage, renderer, numWidth, numHeight, tileSize);
 
+
+    var newDisplayHeight = numHeight * tileSize;
+    var newDisplayWidth = numWidth * tileSize;
+    WIDTH = newDisplayWidth;
+    HEIGHT = newDisplayHeight;
+    renderer.resize(newDisplayWidth, newDisplayHeight);
+
     for(var y=0;y<numHeight;y++){
         for(var x=0;x<numWidth;x++){
             simulatorMap.simMap[y][x] = new Tile(tiles[y][x].classType, tileSize);
@@ -147,6 +211,17 @@ function setupMapFromJSON(jsonObj){
         stage.addChild(car); 
         carList.push(car);
     }
+
+    //load boat
+    var boatListObjs = jsonObj['boats'];
+    boatList = [];
+    for(var i=0;i<boatListObjs.length;i++){
+        var b = boatListObjs[i]; 
+        var boat = new Boat(b['pixi.position.x'], b['pixi.position.y'],
+                          b['xIndex'], b['yIndex'], b['direction']);
+        stage.addChild( boat); 
+        boatList.push( boat);
+    }
     renderer.render(stage);
 
 }
@@ -166,5 +241,9 @@ function loadJSON(e){
         renderer.render(stage);
     }// end on load
 }
+
+/***Html event handler***/
+document.getElementById("uploadcsv").addEventListener("change", loadCSV, true);
+document.getElementById("uploadjson").addEventListener("change", loadJSON, true);
 
 

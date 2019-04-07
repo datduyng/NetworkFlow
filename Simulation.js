@@ -1,12 +1,14 @@
 class SimulationApp{
 	constructor(stage, renderer){
 		this.carList = []; 
+		this.boatList = []; 
 		this.trafficComponents = {};
 
 		this.stage = stage; 
 		this.renderer = renderer; 
 		this.simulationMap = new SimulatorMap(this.stage, this.renderer, WIDTH/tileSize, HEIGHT/tileSize, tileSize);
-		this.simulationMap.setupMap();
+		this.simulationMap.setupMap('no-interactive');
+		this.renderer.render(stage);
 		this.restartState;
 	}
 
@@ -21,20 +23,25 @@ class SimulationApp{
 	    this.simulationMap._clearMap();
 	    this.simulationMap = new SimulatorMap(this.stage, this.renderer, numWidth, numHeight, tileSize);
 
+	    var newDisplayHeight = numHeight * tileSize;
+	    var newDisplayWidth = numWidth * tileSize;
+	    WIDTH = newDisplayWidth;
+	    HEIGHT = newDisplayHeight;
+	    this.renderer.resize(newDisplayWidth, newDisplayHeight);
 
 	    for(var y=0;y<numHeight;y++){
 	        for(var x=0;x<numWidth;x++){
 	            this.simulationMap.simMap[y][x] = new Tile(tiles[y][x].classType, tileSize);
 
 	            //set built direction for intersection
-	            if(tiles[y][x].classType == 'STOP-sign' || 
+	            if(tiles[y][x].classType == 'stop-sign' || 
 	               tiles[y][x].classType == 'traffic-light'){
 	            	this.simulationMap.simMap[y][x].tileClass.builtDirections = tiles[y][x]['builtDirections'];
 	            	//assume that componentIdAssigner only got iterate in new Tile
 	            	this.trafficComponents[componentIdAssigner] = this.simulationMap.simMap[y][x];
+	            	this.simulationMap.simMap[y][x].tileClass.setInteractive();
 	            }
 	            this.simulationMap.simMap[y][x].setXY(x*tileSize, y*tileSize);
-	            this.simulationMap.simMap[y][x].setInteractive();
 	            this.simulationMap.simMap[y][x].setIndexXY(x, y); 
 	            this.stage.addChild(this.simulationMap.simMap[y][x].tileClass);
 	        }
@@ -45,20 +52,35 @@ class SimulationApp{
 	        var c = carListObjs[i]; 
 	        var car = new Car(c['pixi.position.x'], c['pixi.position.y'],
 	                          c['xIndex'], c['yIndex'], c['direction']);
+	        car.id = getNewCarIdAssigner();
+	        car.setInteractive();
 	        this.stage.addChild(car); 
 	        this.carList.push(car);
 	    }
+
+	    var boatListObjs = jsonObj['boats'];
+	    this.boatList = [];
+	    for(var i=0;i<boatListObjs.length;i++){
+	        var b = boatListObjs[i]; 
+	        var boat = new Boat(b['pixi.position.x'], b['pixi.position.y'],
+	                          b['xIndex'], b['yIndex'], b['direction']);
+	        boat.id = getNewCarIdAssigner();
+	        boat.setInteractive();
+	        this.stage.addChild(boat); 
+	        this.boatList.push(boat);
+	    }
+   
 	    this.renderer.render(this.stage);
 	}
-	_carListToJSON(){
+	objListToJson(objList){
 	    var result = []; 
-	    for(var i=0;i<this.carList.length;i++){
-	        var inStr = this.carList[i].toString();
+	    for(var i=0;i<objList.length;i++){
+	        var inStr = objList[i].toString();
 	        var obj = JSON.parse(inStr);
 	        result.push(obj);
 	    }
 	    return result;
-	}	
+	}
 
 	getAppInfo(softwaretype){
 		var result = this.simulationMap.toJSON(softwaretype);
@@ -68,14 +90,15 @@ class SimulationApp{
 	        'numHeight': this.simulationMap.numH, 
 	        'numWidth': this.simulationMap.numW,
 	        'tiles': tiles, 
-	        'cars' : this._carListToJSON(),
+	        'cars' : this.objListToJson(this.carList),
+	        'boats' : this.objListToJson(this.boatList),
 	        'trafficComponents' : trafficComponents
 	    });
 	}
 	updateSimulation(){
 		for(var i=0;i<this.carList.length;i++){
 			var car = this.carList[i]; 
-			car.move();
+			car.move(simulationApp.simulationMap);
 		}
 
 		//TODO: update component list as well
@@ -111,10 +134,21 @@ var stage = new PIXI.Stage(0x66FF99);
 var renderer = new PIXI.autoDetectRenderer(
     WIDTH,
     HEIGHT,
-    {view:document.getElementById("game-canvas")}
+    {view:document.getElementById("game-canvas"), 
+     backgroundColor:0x0F0805, 
+     transparent: false,
+     antialias: false }
 );
 
-let simulationApp = new SimulationApp(stage, renderer);
+
+let simulationApp;
+PIXI.loader.add(dict2Arr(spritePath)).load(setup);
+function setup(){
+	simulationApp = new SimulationApp(stage, renderer);
+    renderer.render(stage);
+}
+
+
 var paused = true;
 var oldTime = Date.now();
 var tick = 0;
@@ -134,12 +168,10 @@ function animate() {
     // 
 	if(tick > TIME_UNIT){// update every 100MS
 		tick = 0; // restart the tick 
-		// console.log('global tick', tickCount);
 		tickCount+=1;
 
 		//start simulation action here
 		simulationApp.updateSimulation();
-		// console.log(simulationApp._carListToJSON());
 	}
 
 
@@ -159,59 +191,7 @@ function getRandomChar(builtDirections){
 
 }
 
-function getCarNextState(car){
-	var newState = null;
-	var nextTile = {
-		'>' : (car.xIndex < simulationApp.simulationMap.numW-2)? 
-				simulationApp.simulationMap.simMap[car.yIndex][car.xIndex+1].tileClass:
-				'end-road', 
-		'<' : (car.xIndex > 1)?
-				simulationApp.simulationMap.simMap[car.yIndex][car.xIndex-1].tileClass:
-				'end-road',
-		'v' : (car.yIndex < simulationApp.simulationMap.numH-2)?
-				simulationApp.simulationMap.simMap[car.yIndex+1][car.xIndex].tileClass:
-				'end-road',
-		'^' : (car.yIndex > 1)?
-				simulationApp.simulationMap.simMap[car.yIndex-1][car.xIndex].tileClass:
-				'end-road'
-	};
-	var transition = {
-		'idle' : 'acel',
-		'STOP' : 'idle', 
-		'acel' : 'regular', 
-		'regular' : 'regular',
-		'stop-intersection' : 'idle-intersection',
-		'idle-intersection' : 'moving-in-intersection',
-		'moving-in-intersection' : 'regular',
-		'turn' : 'regular'
-	}; 
-	var prevState = car.state;
-	if(nextTile[car.direction].generalType == 'road'){
 
-		newState = transition[prevState];
-	}else if(nextTile[car.direction].generalType == 'traffic-light' || 
-			 nextTile[car.direction].generalType == 'STOP-sign'){
-		if(prevState != 'moving-in-intersection')
-			newState = nextTile[car.direction].carEnter(car);
-		
-
-		if(newState == 'not-movable' && car.state != 'moving-in-intersection'){
-			newState = 'stop-intersection'; 
-		}else if(newState == 'movable'){
-			// decide new Direction.
-			//sampling random directions. 
-			var randomDirection = getRandomChar(nextTile[car.direction].builtDirections);
-			car.turningDirection = randomDirection;
-			if(car.direction != car.turningDirection){
-				newState = 'turn';
-			}else newState = transition[prevState];
-		}
-	}else if(nextTile[car.direction].generalType == 'end-road'){
-		console.log("end road sotp");
-		newState = 'STOP';
-	}
-	return newState;
-}
 
 // Event Handler
 document.getElementById("uploadjson").addEventListener("change",loadJSON, true);
@@ -239,7 +219,7 @@ function exportJSON(fileName, json, softwaretype){
     var link; 
     link = document.createElement('a');
     link.setAttribute('href', data); 
-    link.setAttribute('download', fileName); 
+    link.setAttribute('download',	 fileName); 
     link.click(); 
 }
 

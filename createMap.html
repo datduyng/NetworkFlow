@@ -53,6 +53,12 @@
       padding: 5px;
     }
 
+    .visualize-boat-orientation {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 5px;
+    }
+
     .rotated {
       transform: rotate(90deg);
       -ms-transform: rotate(90deg); /* IE 9 */
@@ -106,16 +112,36 @@
 <!-- end side nav bar -->
 
     <div class="col-md-12">
-        <div align="right">
-        <canvas id="game-canvas" width="800" height="600"></canvas>    
-        </div>
 
-        <script type="text/javascript" src="./global.js"></script>
 
     <!--   <fieldset>
       <legend>Button group</legend> -->
         <div class="app-control" align="right">
             <div class="centered center-btn app-control" style="display: inline-block; text-align: left;text-align: center;">
+              <div align="center">
+                <canvas id="game-canvas" width="800" height="600"></canvas>    
+              </div>
+
+              <div class="row">
+                <form class="col s12">
+                  <div class="col s12">
+                    Simulation Map Size:
+                    <div class="input-field inline">
+                      <input id="mapHeightInput" type="text" class="validate">
+                      <label for="text">Map Height</label>
+                      <span class="helper-text" data-error="wrong" data-success="right"></span>
+                    </div>
+                    <div class="input-field inline">
+                      <input id="mapWidthInput" type="text" class="validate">
+                      <label for="text">Map width</label>
+                      <span class="helper-text" data-error="wrong" data-success="right"></span>
+                    </div>
+                  </div>
+
+                </form>
+              </div>
+
+              <script type="text/javascript" src="./global.js"></script>
               <form action="#">
                 <div class="file-field input-field">
                   <div class="btn">
@@ -137,6 +163,7 @@
                                      <br />
                 Tile Type: &emsp;<a id="groundBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'ground';">Ground</a>
                            &emsp;<a id="grassBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'grass';">Grass</a>
+                           &emsp;<a id="waterBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'water';">water</a><br />
                            &emsp;<a id="roadHorizontalBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'road-horizontal';">Road-horizontal</a>
                            &emsp;<a id="roadVerticleBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'road-verticle';">Road-verticle</a><br />
                   <!-- <a href="" class="waves-effect waves-light btn">Stuff3</a><br /> -->
@@ -147,25 +174,14 @@
 
                 Car: &emsp;<a id="carBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'car';">Car</a><img src="./images/sim-asset/car.png" class="visualize-car-orientation"></img>
                      <img src="./images/sim-asset/arrow.png" class="visualize-car-orientation"></img>
-                     <a class="btn-floating btn-small blue" onclick="rotateVisualization();"><i class="small material-icons">rotate_90_degrees_ccw</i></a><br>
-                <div class="row">
-                  <form class="col s12">
-                    <div class="col s12">
-                      Stopping point:
-                      <div class="input-field inline">
-                        <input id="text" type="text" class="validate">
-                        <label for="text">x</label>
-                        <span class="helper-text" data-error="wrong" data-success="right"></span>
-                      </div>
-                      <div class="input-field inline">
-                        <input id="text" type="text" class="validate">
-                        <label for="text">y</label>
-                        <span class="helper-text" data-error="wrong" data-success="right"></span>
-                      </div>
-                    </div>
+                     <a class="btn-floating btn-small blue" onclick="rotateVisualization('car');"><i class="small material-icons">rotate_90_degrees_ccw</i></a><br>
 
-                  </form>
-                </div>
+                Boat: &emsp;<a id="boatBtn" class="waves-effect waves-light btn" onclick="currentTileType = 'boat';">Boat</a><img src="./images/sim-asset/boat.png" class="visualize-boat-orientation"></img>
+                     <img src="./images/sim-asset/arrow.png" class="visualize-boat-orientation"></img>
+                     <a class="btn-floating btn-small blue" onclick="rotateVisualization('boat');"><i class="small material-icons">rotate_90_degrees_ccw</i></a><br>
+
+
+
                        <br /> <br />
                     ---------------------------<br />
                 Export to: &emsp;<a id="constructionBarierBtn" class="waves-effect waves-light btn" onclick="
@@ -177,6 +193,7 @@
                            <i class="material-icons right">send</i></a>
             </div>
         </div>
+        <script type="text/javascript" src="./Boat.js"></script>
         <script type="text/javascript" src="./Car.js"></script>
         <script type="text/javascript" src="./Ground.js"></script>
         <script type="text/javascript" src="./StopSign.js"></script>
@@ -194,73 +211,3 @@
 
 </body>
 </html>
-
-
-<!-- PIXI-tilemap -->
-<!--     // var loader = new PIXI.loaders.Loader();
-    // loader.add('atlas', 'basic/atlas01.json');
-    // loader.load(function(loader, resources) {
-    //   var tilemap = new PIXI.tilemap.CompositeRectTileLayer(0, [resources['atlas_image'].texture]);
-
-    //     console.log(tilemap);
-    //     var size = 32;
-    //     // bah, im too lazy, i just want to specify filenames from atlas
-    //     for (var i=0;i<7;i++)
-    //         for (var j=0;j<7;j++) {
-    //             tilemap.addFrame("grass.png", i*size, j*size);
-    //             // if (i%2==1 && j%2==1)
-    //             //     tilemap.addFrame("tough.png", i*size, j*size);
-    //         }
-
-    //     // if you are lawful citizen, please use textures from the loader
-    //     // var textures = resources.atlas.textures;
-    //     // tilemap.addFrame(textures["brick.png"], 2*size, 2*size);
-    //     // tilemap.addFrame(textures["brick_wall.png"], 2*size, 3*size);
-
-    //     // renderer.render(tilemap);
-    //     app.stage.addChild(tilemap);
-    // });
-
-    // PIXI.loader.add(["imgs/imgGround.png"]).load(setup);
-
-    // function setup() {
-
-    //     var groundTiles = new PIXI.tilemap.CompositeRectTileLayer(0, PIXI.utils.TextureCache['imgs/imgGround.png']);
-    //     app.stage.addChild(groundTiles);
-
-
-    //     for (var i = 0; i <= parseInt(resolutionX / tileSizeX); i++) {
-    //         for (var j = 0; j <= parseInt(resolutionX / tileSizeX); j++) {
-    //             groundTiles.addFrame('imgs/imgGround.png', i * tileSizeX, j * tileSizeY);
-    //         }
-    //     }
-    // }
-
-
-    /*
-
-var loader = new PIXI.loaders.Loader();
-loader.add('atlas', 'basic/atlas.json');
-loader.load(function(loader, resources) {
-  var tilemap = new PIXI.tilemap.CompositeRectTileLayer(0, [resources['atlas_image'].texture]);
-    var size = 32;
-    // bah, im too lazy, i just want to specify filenames from atlas
-    for (var i=0;i<7;i++)
-        for (var j=0;j<7;j++) {
-            tilemap.addFrame("grass.png", i*size, j*size);
-            if (i%2==1 && j%2==1)
-                tilemap.addFrame("tough.png", i*size, j*size);
-        }
-
-    // if you are lawful citizen, please use textures from the loader
-    var textures = resources.atlas.textures;
-    tilemap.addFrame(textures["brick.png"], 2*size, 2*size);
-    tilemap.addFrame(textures["brick_wall.png"], 2*size, 3*size);
-
-    renderer.render(tilemap);
-});
-
-<<<<<<< HEAD:cityBoost.html
-    */ -->
-
-

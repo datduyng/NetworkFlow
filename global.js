@@ -23,7 +23,9 @@ var spritePath = {
     'traffic-light-we' : 'images/sim-asset/traffic-light-we.png',
     'construction-man' : 'images/sim-asset/construction-man.png', 
     'construction-barrier' : 'images/sim-asset/construction-barrier.png', 
-    'car' : 'images/sim-asset/car.png'
+    'car' : 'images/sim-asset/car.png',
+    'water' : 'images/sim-asset/water.png',
+    'boat' : 'images/sim-asset/boat.png'
 };
 
 
@@ -48,3 +50,16 @@ var tileSize = 50;
 
 var carIdAssigner = 0; 
 var componentIdAssigner = 0;
+
+
+
+function setCarIdAssigner(step){
+    carIdAssigner += step;
+}
+
+function getNewCarIdAssigner(){
+    var step = 2;
+    setCarIdAssigner(carIdAssigner+step);
+    return carIdAssigner;
+}
+
