@@ -33,7 +33,7 @@ Tile.prototype.setInteractive = function(){
         this.tileClass.tint = 0xB27D7D;
         if(down){// if hover and mouse down
             //build here
-            if(currentTileType == 'car' || currentTileType == 'boat') this.createTileClassType(currentTileType, true)
+            if(currentTileType != 'car' && currentTileType != 'boat') this.createTileClassType(currentTileType, true)
         }
         renderer.render(stage);
     }).on('mouseout', (event) => {
