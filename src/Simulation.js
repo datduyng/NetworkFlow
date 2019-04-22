@@ -1,3 +1,4 @@
+
 class SimulationApp{
 	constructor(stage, renderer){
 		this.carList = []; 
@@ -8,6 +9,7 @@ class SimulationApp{
 		this.renderer = renderer; 
 		this.simulationMap = new SimulatorMap(this.stage, this.renderer, WIDTH/tileSize, HEIGHT/tileSize, tileSize);
 		this.simulationMap.setupMap('no-interactive');
+		this.preloadedJSON(preloaded["full_map01"]);
 		this.renderer.render(stage);
 		this.restartState;
 	}
@@ -120,6 +122,16 @@ class SimulationApp{
 		this.setupMapFromJSON(this.restartState);
 	}
 
+	preloadedJSON(txt){ 
+		if(txt != null){
+	        var jsonData = JSON.parse(txt);
+	        this.setupMapFromJSON(jsonData);
+	        this.restartState = jsonData;
+		}else{
+			console.log("invalid preloaded map path");
+		}
+	}
+
 }
 
 
@@ -193,8 +205,6 @@ function getRandomChar(builtDirections){
 
 
 
-// Event Handler
-document.getElementById("uploadjson").addEventListener("change",loadJSON, true);
 
 function loadJSON(e){
     var data = null;
@@ -209,6 +219,14 @@ function loadJSON(e){
         simulationApp.restartState = jsonData;
     }// end on load. 
 }
+
+
+
+// Event Handler
+document.getElementById("uploadjson").addEventListener("change",loadJSON, true);
+
+
+
 
 function exportJSON(fileName, json, softwaretype){
     if(json == null) json = simulationApp.getAppInfo(softwaretype); 
